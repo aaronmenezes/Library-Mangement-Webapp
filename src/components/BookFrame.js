@@ -126,6 +126,10 @@ const useStyles = makeStyles((theme) => ({
   function createData(isbn, title, authors, publisher, publication_date,average_rating,num_pages,language_code,ratings_count,text_reviews_count,isbn13) {
     return {isbn, title, authors, publisher, publication_date,average_rating,num_pages,language_code,ratings_count,text_reviews_count,isbn13 };
   }
+
+  function createBagData(isbn,name,authors,  first_name, last_name,  checkout_date) { 
+    return {isbn,name,authors,first_name, last_name,  checkout_date };
+  }
   
   const bookrows = [];  
   const bagrows = [];    
@@ -151,11 +155,9 @@ export default function BookFrame() {
     React.useEffect(() => {
         fetch('http://localhost:8080/getCheckedBooks')
         .then(results => results.json())
-        .then(data => {
-        console.log(data["booklist"])
-        data["booklist"].forEach((item) => { 
-            console.log(item)
-            //bagrows.push(createData(item.isbn, item.title, item.authors, item.publisher, item.publication_date, item.average_rating, item.num_pages, item.language_code, item.ratings_count, item.text_reviews_count, item.isbn13)); 
+        .then(data => { 
+        data["booklist"].forEach((item) => {   
+            bagrows.push(createBagData(item.bag_item.bookID, item.book_item.title, item.book_item.authors,  item.member_item.first_name, item.member_item.last_name, item.bag_item.checkout_date)); 
         });
         });
     }, []);
@@ -171,15 +173,15 @@ export default function BookFrame() {
                             <TableHead>
                                 <TableRow>
                                     <TableCell>  </TableCell> 
-                                    <TableCell width="30%"> Title </TableCell>
-                                    <TableCell> Authors </TableCell> 
-                                    <TableCell> Publisher </TableCell> 
-                                    <TableCell> Publication_date </TableCell> 
+                                    <TableCell> Title </TableCell>
+                                    <TableCell> authors </TableCell> 
+                                    <TableCell> Members Name </TableCell> 
+                                    <TableCell> Checkout Date </TableCell> 
                                     <TableCell> ISBN</TableCell>  
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                            {bookrows.map((row) => (
+                            {bagrows.map((row) => (
                                 
                                 <TableRow key={row.id}>
                                     <TableCell>
@@ -187,10 +189,10 @@ export default function BookFrame() {
                                             <MoreVert/>
                                         </IconButton>
                                     </TableCell> 
-                                    <TableCell width="30%">  {row.title}  </TableCell>
+                                    <TableCell>{row.name}</TableCell>
                                     <TableCell>{row.authors}</TableCell> 
-                                    <TableCell>{row.publisher}</TableCell> 
-                                    <TableCell>{row.publication_date}</TableCell> 
+                                    <TableCell>{row.first_name}</TableCell> 
+                                    <TableCell>{row.checkout_date}</TableCell> 
                                     <TableCell>{row.isbn}</TableCell>  
                                 </TableRow>
                             ))}
@@ -251,7 +253,7 @@ export default function BookFrame() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                        {bagrows.map((row) => (
+                        {bookrows.map((row) => (
                             
                             <TableRow key={row.id}>
                                 <TableCell>
