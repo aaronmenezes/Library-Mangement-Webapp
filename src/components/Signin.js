@@ -9,10 +9,12 @@ import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
+import FormLabel from '@material-ui/core/FormLabel';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import { useHistory } from "react-router-dom"; 
 
 function Copyright() {
   return (
@@ -66,14 +68,15 @@ async function loginUser(credentials) {
       },
       body: JSON.stringify(credentials)
     })
-      .then(data => data.json())
+      .then(data => data.json()) 
    }
 
 
-export default function SignIn({ setToken }) {
+export default function SignIn({ setToken }) { 
   const classes = useStyles();
   const [userId, setUserId] = useState();
   const [psswd, setPassword] = useState();
+  const [showError, setShowError] = React.useState(false)
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -82,7 +85,10 @@ export default function SignIn({ setToken }) {
       userId,
       psswd
     });
-    setToken(token);
+    console.log(token["login"])
+    if(token["login"] == "success"){   
+      setToken(token);
+    }else setShowError(true)
   }
 
   return (
@@ -125,6 +131,8 @@ export default function SignIn({ setToken }) {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
+            {showError ?
+            <FormLabel >Invalid username or password</FormLabel>: null}
             <Button
               type="submit"
               fullWidth
