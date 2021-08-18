@@ -161,13 +161,13 @@ const useStyles = makeStyles((theme) => ({
   function createBagData(book_item,bag_item,member_item) { 
     return {book_item,bag_item,member_item};
   }
-  
-  const bookrows = [];  
-  const bagrows = [];    
+    
 
 export default function BookFrame() {
     const classes = useStyles(); 
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight); 
+    const [bookBagList, setBookBagList] = React.useState([]);
+    const [bookList, setBookList] = React.useState([]);
     const [selectedMenuRow, setSelectedMenuRow] = React.useState();
     const [deleteopen, setDeleteopen] = React.useState();
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -254,21 +254,25 @@ export default function BookFrame() {
         fetch('http://localhost:8080/getBooksInventory')
           .then(results => results.json())
           .then(data => {
-            bookrows.splice(0,bookrows.length)
+            bookList.splice(0,bookList.length)
+            let bookrows=[]
               console.log(data["booklist"]) 
               data["booklist"].forEach((item) => { 
                 bookrows.push(createData(item.book_item,item.inventory_item)); 
             });
+           setBookList(bookrows) 
           });
       }, []);
     React.useEffect(() => {
         fetch('http://localhost:8080/getCheckedBooks')
         .then(results => results.json())
         .then(data => { 
-          bagrows.splice(0,bagrows.length)
+          bookBagList.splice(0,bookBagList.length)
+          let bagrows=[]
         data["booklist"].forEach((item) => {   
             bagrows.push(createBagData(  item.book_item,item.bag_item,item.member_item)); 
            });
+           setBookBagList(bagrows)
         });
     }, []);
 
@@ -319,7 +323,7 @@ export default function BookFrame() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                            {bagrows.map((row) => (
+                            {bookBagList.map((row) => (
                                 
                                 <TableRow key={row.bag_item.bagId}>
                                     <TableCell  width="5%">
@@ -361,7 +365,7 @@ export default function BookFrame() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                        {bookrows.map((row) => (
+                        {bookList.map((row) => (
                             
                             <TableRow key={row.book_item.isbn}>
                                 <TableCell>
