@@ -22,6 +22,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Snackbar from '@material-ui/core/Snackbar';
 import InfoDialog from './InfoDialog';
 import BookUpdateDialog from'./BookUpdateDialog';
+import BookIssueDialog from'./BookIssueDialog';
 
 
 function Copyright() {
@@ -37,8 +38,6 @@ function Copyright() {
     );
   }
   
-const drawerWidth = 240;
-
 async function deleteBook(bookId) {
   let url = 'http://localhost:8080/deleteBook?bookId=' + bookId;
   console.log(url)
@@ -58,8 +57,7 @@ async function checkin(checkindetils) {
     .then(data => data.json()) 
  }
 
- async function updateBookDetails(details) {
-   console.log(details)
+ async function updateBookDetails(details) { 
   return fetch('http://localhost:8080/updateBookDetails', {
     method: 'POST',
     headers: {
@@ -71,6 +69,19 @@ async function checkin(checkindetils) {
   .then(data => data.json()) 
  }
   
+ async function checkOutBook(details) { 
+  return fetch('http://localhost:8080/checkout', {
+    method: 'POST',
+    headers: {
+      'mode':'no-cors',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(details)
+  })
+  .then(data => data.json()) 
+ }
+const drawerWidth = 240;
+
 const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
@@ -161,6 +172,9 @@ const useStyles = makeStyles((theme) => ({
   function createBagData(book_item,bag_item,member_item) { 
     return {book_item,bag_item,member_item};
   }
+  function createMemberData(id,user_id,join_date,first_name,last_name,dob,role) {  
+    return {id,user_id,join_date,first_name,last_name,dob,role};
+  }
     
 
 export default function BookFrame() {
@@ -168,12 +182,14 @@ export default function BookFrame() {
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight); 
     const [bookBagList, setBookBagList] = React.useState([]);
     const [bookList, setBookList] = React.useState([]);
+    const [memberList, setMemberList] = React.useState([]);
     const [selectedMenuRow, setSelectedMenuRow] = React.useState();
     const [deleteopen, setDeleteopen] = React.useState();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [anchorE2, setAnchorE2] = React.useState(null);
     const [infoDialogOpen, setInfoDialogOpen] = React.useState(false);
     const [updateDialogOpen, setUpdateDialogOpen] = React.useState(false);
+    const [issueDialogOpen, setIssueDialogOpen] = React.useState(false);
     const [selectedInfoValue, setSelectedInfoValue] = React.useState(null); 
     
     const handleClick = (event) => {
@@ -185,6 +201,7 @@ export default function BookFrame() {
       setAnchorE2(null);
       setInfoDialogOpen(false)
       setUpdateDialogOpen(false)
+      setIssueDialogOpen(false)
     };
 
     function updateDialogData(data){   
@@ -193,6 +210,11 @@ export default function BookFrame() {
       updateSubmit(dataid,data)
     };
   
+    function issueDialogData(data){
+      console.log(data)
+      checkoutsubmit(data.selected_member.id,data.book_item.bookID)
+    };
+
     const handleMoreClick = (event,row) => {
       setSelectedMenuRow(row) 
       setAnchorEl(event.currentTarget);
@@ -202,6 +224,16 @@ export default function BookFrame() {
       setAnchorE2(event.currentTarget);
     };
 
+    const checkoutsubmit = async (userId,bookId) => {  
+      const data = await checkOutBook({
+        userId,
+        bookId
+      });
+      console.log(data)
+       if(data["status"] == "success"){   
+        // update lists
+       } 
+    }
     const updateSubmit = async (bookId,bookDetails) => {  
       const data = await updateBookDetails({
         bookId,
@@ -244,6 +276,11 @@ export default function BookFrame() {
       setUpdateDialogOpen(true)    
       setAnchorE2(null);
     };
+    const issuebook = (row) => {  
+      setSelectedInfoValue(row)
+      setIssueDialogOpen(true)    
+      setAnchorE2(null);
+    };
     const showBookInfo = (row) => { 
       setSelectedInfoValue(row)
       setInfoDialogOpen(true)
@@ -269,12 +306,24 @@ export default function BookFrame() {
         .then(data => { 
           bookBagList.splice(0,bookBagList.length)
           let bagrows=[]
-        data["booklist"].forEach((item) => {   
+          data["booklist"].forEach((item) => {   
             bagrows.push(createBagData(  item.book_item,item.bag_item,item.member_item)); 
            });
            setBookBagList(bagrows)
         });
     }, []);
+    React.useEffect(() => {
+      fetch('http://localhost:8080/getMemberList')
+      .then(results => results.json())
+      .then(data => {  
+          memberList.splice(0,memberList.length)
+          let memberRows=[]
+          data["memberlist"].forEach((item) => {   
+            memberRows.push(createMemberData(item.id,item.user_id,item.join_date,item.first_name,item.last_name,item.dob,item.role));
+          }); 
+         setMemberList(memberRows) 
+      });
+  }, []);
 
     function CheckoutMenu(){
      return (<Menu
@@ -297,6 +346,7 @@ export default function BookFrame() {
            open={Boolean(anchorE2)}
            onClose={handleClose}
          >
+         <MenuItem onClick={()=>{issuebook(selectedMenuRow)}}>Issue Book</MenuItem>
          <MenuItem onClick={()=>{updatebook(selectedMenuRow)}}>Update Book Info</MenuItem>
          <MenuItem onClick={()=> {deletebook(selectedMenuRow)}}>Delete this Book</MenuItem> 
        </Menu>);
@@ -358,10 +408,10 @@ export default function BookFrame() {
                                 <TableCell width="30%"> Title </TableCell>
                                 <TableCell> Authors </TableCell> 
                                 <TableCell> Publisher </TableCell> 
-                                <TableCell> Publication date </TableCell> 
-                                <TableCell> No. of books </TableCell> 
-                                <TableCell> No. Issued books </TableCell> 
-                                <TableCell> ISBN</TableCell>  
+                                <TableCell width="20%"> Publication date </TableCell> 
+                                <TableCell width="15%"> No. of books </TableCell> 
+                                <TableCell width="15%"> No. Issued books </TableCell> 
+                                <TableCell width="5%"> ISBN</TableCell>  
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -374,7 +424,7 @@ export default function BookFrame() {
                                     </IconButton>
                                     <AllBooksMenu/>
                                 </TableCell> 
-                                <TableCell width="30%">  {row.book_item.title}  </TableCell>
+                                <TableCell  >  {row.book_item.title}  </TableCell>
                                 <TableCell>{row.book_item.authors}</TableCell> 
                                 <TableCell>{row.book_item.publisher}</TableCell> 
                                 <TableCell>{row.book_item.publication_date}</TableCell> 
@@ -392,6 +442,7 @@ export default function BookFrame() {
             </Grid>
         <InfoDialog selectedValue={selectedInfoValue} open={infoDialogOpen} onClose={handleClose} />          
         <BookUpdateDialog selectedValue={selectedInfoValue} open={updateDialogOpen}  onClose={handleClose} onUpdateData={updateDialogData} />            
+        <BookIssueDialog selectedValue={selectedInfoValue} memberList={memberList} open={issueDialogOpen}  onClose={handleClose} onCheckoutData={issueDialogData} />            
         <Box pt={4}>
             <Copyright />
         </Box>
