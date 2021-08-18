@@ -17,6 +17,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';  
 import IconButton from '@material-ui/core/IconButton';
 import MoreVert from '@material-ui/icons/MoreVert';  
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import InfoDialog from './InfoDialog';
 
 
 function Copyright() {
@@ -33,7 +36,17 @@ function Copyright() {
   }
   
 const drawerWidth = 240;
- 
+async function checkin(checkindetils) {
+  return fetch('http://localhost:8080/checkin', {
+    method: 'POST',
+    headers: {
+      'mode':'no-cors',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(checkindetils)
+  })
+    .then(data => data.json()) 
+ }
   
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -118,12 +131,12 @@ const useStyles = makeStyles((theme) => ({
      
   }));
 
-  function createData(isbn, title, authors, publisher, publication_date,average_rating,num_pages,language_code,ratings_count,text_reviews_count,isbn13,count,checkout_count) {
-    return {isbn, title, authors, publisher, publication_date,average_rating,num_pages,language_code,ratings_count,text_reviews_count,isbn13,count,checkout_count };
+  function createData(book_item, inventory_item) {
+    return {book_item, inventory_item};
   }
 
-  function createBagData(isbn,name,authors,  first_name, last_name,  checkout_date) { 
-    return {isbn,name,authors,first_name, last_name,  checkout_date };
+  function createBagData(book_item,bag_item,member_item) { 
+    return {book_item,bag_item,member_item};
   }
   
   const bookrows = [];  
@@ -132,21 +145,71 @@ const useStyles = makeStyles((theme) => ({
 export default function BookFrame() {
     const classes = useStyles(); 
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight); 
+    const [selectedMenuRow, setSelectedMenuRow] = React.useState();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorE2, setAnchorE2] = React.useState(null);
+    const [infoDialogOpen, setInfoDialogOpen] = React.useState(false);
+    const [selectedInfoValue, setSelectedInfoValue] = React.useState(null);
+   
+    const handleClick = (event) => {
+      setAnchorE2(event.currentTarget);
+    };
+  
+    const handleClose = () => {
+      setAnchorEl(null);
+      setAnchorE2(null);
+      setInfoDialogOpen(false)
+    };
+  
+    const handleMoreClick = (event,row) => {
+      setSelectedMenuRow(row)
+      console.log(row)
+      setAnchorEl(event.currentTarget);
+    };
 
-    function handleMoreClick (item){
-            console.log(item) 
-      };
+    const checkinSubmit = async (userId,bookId) => { 
+      console.log(userId,bookId)
+      const data = await checkin({
+        userId,
+        bookId
+      });
+      console.log(data)
+       if(data["status"] == "success"){   
+        // update lists
+       } 
+    }
+
+    const updatebook = (row) => {  
+      //checkinSubmit(row["memberID"],row["isbn"])       
+      setAnchorE2(null);
+    };
+
+    const deletebook = (row) => { 
+      console.log(row)
+      //checkinSubmit(row["memberID"],row["isbn"])       
+      setAnchorE2(null);
+    };
+
+    const returnbook = (row) => { 
+      console.log(row)
+      checkinSubmit(row["memberID"],row["isbn"])       
+      setAnchorEl(null);
+    };
+  
+    const showBookInfo = (row) => {
+      console.log(row)
+      setSelectedInfoValue(row)
+      setInfoDialogOpen(true)
+    };
 
     React.useEffect(() => {
         fetch('http://localhost:8080/getBooksInventory')
           .then(results => results.json())
           .then(data => {
-              console.log(data["booklist"])
+            bookrows.splice(0,bookrows.length)
+              console.log(data["booklist"]) 
               data["booklist"].forEach((item) => { 
-                bookrows.push(createData(item.book_item.isbn, item.book_item.title, item.book_item.authors,
-                  item.book_item.publisher, item.book_item.publication_date, item.book_item.average_rating,
-                  item.book_item.num_pages, item.book_item.language_code, item.book_item.ratings_count,
-                  item.book_item.text_reviews_count, item.book_item.isbn13,item.inventory_item.count,item.inventory_item.checkout_count)); 
+                bookrows.push(createData(item.book_item,item.inventory_item)); 
             });
           });
       }, []);
@@ -154,11 +217,38 @@ export default function BookFrame() {
         fetch('http://localhost:8080/getCheckedBooks')
         .then(results => results.json())
         .then(data => { 
+          bagrows.splice(0,bagrows.length)
         data["booklist"].forEach((item) => {   
-            bagrows.push(createBagData(item.bag_item.bookID, item.book_item.title, item.book_item.authors,  item.member_item.first_name, item.member_item.last_name, item.bag_item.checkout_date)); 
+            bagrows.push(createBagData(  item.book_item,item.bag_item,item.member_item)); 
            });
         });
     }, []);
+
+    function CheckoutMenu(){
+     return (<Menu
+          id="issuebook-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+        <MenuItem onClick={()=>{returnbook(selectedMenuRow)}}>Return Book</MenuItem>
+        <MenuItem onClick={()=> {showBookInfo(selectedMenuRow)}}>See All Info</MenuItem> 
+      </Menu>);
+    }
+
+    function AllBooksMenu(){
+      return (<Menu
+           id="booklist-menu"
+           anchorEl={anchorE2}
+           keepMounted
+           open={Boolean(anchorE2)}
+           onClose={handleClose}
+         >
+         <MenuItem onClick={()=>{updatebook(selectedMenuRow)}}>Update Book Info</MenuItem>
+         <MenuItem onClick={()=> {deletebook(selectedMenuRow)}}>Delete this Book</MenuItem> 
+       </Menu>);
+     }
 
     return(
      <Container maxWidth="lg" className={classes.container}>
@@ -174,24 +264,29 @@ export default function BookFrame() {
                                     <TableCell width="30%"> Title </TableCell>
                                     <TableCell width="20%"> Authors </TableCell> 
                                     <TableCell width="20%"> Member</TableCell> 
-                                    <TableCell width="40%"> Checkout Date </TableCell> 
+                                    <TableCell width="10%"> Status </TableCell> 
+                                    <TableCell width="30%"> Issue Date </TableCell> 
+                                    <TableCell width="40%"> ReturnDate </TableCell> 
                                     <TableCell width="15%"> ISBN</TableCell>  
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                             {bagrows.map((row) => (
                                 
-                                <TableRow key={row.id}>
+                                <TableRow key={row.bag_item.bagId}>
                                     <TableCell  width="5%">
-                                        <IconButton onClick={ ()=>handleMoreClick(row)}> 
+                                        <IconButton aria-controls="simple-menu" aria-haspopup="true"  onClick={(event ) => {handleMoreClick(event, row) }}> 
                                             <MoreVert/>
                                         </IconButton>
+                                        <CheckoutMenu></CheckoutMenu>
                                     </TableCell> 
-                                    <TableCell width="30%">{row.name}</TableCell>
-                                    <TableCell width="20%">{row.authors}</TableCell> 
-                                    <TableCell width="20%">{row.first_name + " " +row.last_name}</TableCell> 
-                                    <TableCell width="10%">{row.checkout_date}</TableCell> 
-                                    <TableCell width="15%">{row.isbn}</TableCell>  
+                                    <TableCell width="30%">{row.book_item.title}</TableCell>
+                                    <TableCell width="20%">{row.book_item.authors}</TableCell> 
+                                    <TableCell width="20%">{row.member_item.first_name + " " +row.member_item.last_name}</TableCell> 
+                                    <TableCell width="10%">{row.bag_item.status==1?"Issued":"Returned"}</TableCell> 
+                                    <TableCell width="30%">{row.bag_item.checkout_date}</TableCell> 
+                                    <TableCell width="40%">{row.bag_item.checkin_date?row.bag_item.checkin_date:"-"}</TableCell> 
+                                    <TableCell width="10%">{row.book_item.isbn}</TableCell>  
                                 </TableRow>
                             ))}
                             </TableBody> 
@@ -220,19 +315,20 @@ export default function BookFrame() {
                         <TableBody>
                         {bookrows.map((row) => (
                             
-                            <TableRow key={row.id}>
+                            <TableRow key={row.book_item.isbn}>
                                 <TableCell>
-                                    <IconButton onClick={ ()=>handleMoreClick(row)}> 
+                                    <IconButton onClick={handleClick}> 
                                         <MoreVert/>
                                     </IconButton>
+                                    <AllBooksMenu/>
                                 </TableCell> 
-                                <TableCell width="30%">  {row.title}  </TableCell>
-                                <TableCell>{row.authors}</TableCell> 
-                                <TableCell>{row.publisher}</TableCell> 
-                                <TableCell>{row.publication_date}</TableCell> 
-                                <TableCell>{row.count}</TableCell> 
-                                <TableCell>{row.checkout_count}</TableCell> 
-                                <TableCell>{row.isbn}</TableCell>  
+                                <TableCell width="30%">  {row.book_item.title}  </TableCell>
+                                <TableCell>{row.book_item.authors}</TableCell> 
+                                <TableCell>{row.book_item.publisher}</TableCell> 
+                                <TableCell>{row.book_item.publication_date}</TableCell> 
+                                <TableCell>{row.inventory_item.count}</TableCell> 
+                                <TableCell>{row.inventory_item.checkout_count}</TableCell> 
+                                <TableCell>{row.book_item.isbn}</TableCell>  
                             </TableRow>
                         ))}
                         </TableBody> 
@@ -242,7 +338,7 @@ export default function BookFrame() {
             </Grid>
 
             </Grid>
-                    
+            <InfoDialog selectedValue={selectedInfoValue} open={infoDialogOpen} onClose={handleClose} />            
         <Box pt={4}>
             <Copyright />
         </Box>
