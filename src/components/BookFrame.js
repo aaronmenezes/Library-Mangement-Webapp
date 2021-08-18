@@ -19,7 +19,9 @@ import IconButton from '@material-ui/core/IconButton';
 import MoreVert from '@material-ui/icons/MoreVert';  
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Snackbar from '@material-ui/core/Snackbar';
 import InfoDialog from './InfoDialog';
+import BookUpdateDialog from'./BookUpdateDialog';
 
 
 function Copyright() {
@@ -36,6 +38,14 @@ function Copyright() {
   }
   
 const drawerWidth = 240;
+
+async function deleteBook(bookId) {
+  let url = 'http://localhost:8080/deleteBook?bookId=' + bookId;
+  console.log(url)
+  return fetch(url)  
+    .then(data => data.json()) 
+ }
+
 async function checkin(checkindetils) {
   return fetch('http://localhost:8080/checkin', {
     method: 'POST',
@@ -46,6 +56,19 @@ async function checkin(checkindetils) {
     body: JSON.stringify(checkindetils)
   })
     .then(data => data.json()) 
+ }
+
+ async function updateBookDetails(details) {
+   console.log(details)
+  return fetch('http://localhost:8080/updateBookDetails', {
+    method: 'POST',
+    headers: {
+      'mode':'no-cors',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(details)
+  })
+  .then(data => data.json()) 
  }
   
 const useStyles = makeStyles((theme) => ({
@@ -146,11 +169,13 @@ export default function BookFrame() {
     const classes = useStyles(); 
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight); 
     const [selectedMenuRow, setSelectedMenuRow] = React.useState();
+    const [deleteopen, setDeleteopen] = React.useState();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [anchorE2, setAnchorE2] = React.useState(null);
     const [infoDialogOpen, setInfoDialogOpen] = React.useState(false);
-    const [selectedInfoValue, setSelectedInfoValue] = React.useState(null);
-   
+    const [updateDialogOpen, setUpdateDialogOpen] = React.useState(false);
+    const [selectedInfoValue, setSelectedInfoValue] = React.useState(null); 
+    
     const handleClick = (event) => {
       setAnchorE2(event.currentTarget);
     };
@@ -159,16 +184,35 @@ export default function BookFrame() {
       setAnchorEl(null);
       setAnchorE2(null);
       setInfoDialogOpen(false)
+      setUpdateDialogOpen(false)
+    };
+
+    function updateDialogData(data){   
+      let dataid= data["bookID"]
+      delete data.bookID;
+      updateSubmit(dataid,data)
     };
   
     const handleMoreClick = (event,row) => {
-      setSelectedMenuRow(row)
-      console.log(row)
+      setSelectedMenuRow(row) 
       setAnchorEl(event.currentTarget);
     };
+    const handleAllMoreClick = (event,row) => {
+      setSelectedMenuRow(row) 
+      setAnchorE2(event.currentTarget);
+    };
 
-    const checkinSubmit = async (userId,bookId) => { 
-      console.log(userId,bookId)
+    const updateSubmit = async (bookId,bookDetails) => {  
+      const data = await updateBookDetails({
+        bookId,
+        bookDetails
+      });
+      console.log(data)
+       if(data["status"] == "success"){   
+        // update lists
+       } 
+    }
+    const checkinSubmit = async (userId,bookId) => {  
       const data = await checkin({
         userId,
         bookId
@@ -178,28 +222,32 @@ export default function BookFrame() {
         // update lists
        } 
     }
+    const deleteSubmit = async (bookId) => {  
+      const data = await deleteBook( bookId ); 
+       if(data["status"] == "success"){   
+        setDeleteopen(true)
+       } 
+    }
 
-    const updatebook = (row) => {  
-      //checkinSubmit(row["memberID"],row["isbn"])       
+    const deletebook = (row) => {       
+      deleteSubmit(row["book_item"]["bookID"])       
       setAnchorE2(null);
     };
 
-    const deletebook = (row) => { 
-      console.log(row)
-      //checkinSubmit(row["memberID"],row["isbn"])       
-      setAnchorE2(null);
-    };
-
-    const returnbook = (row) => { 
-      console.log(row)
-      checkinSubmit(row["memberID"],row["isbn"])       
+    const returnbook = (row) => {  
+      checkinSubmit(row["member_item"]["id"],row["book_item"]["bookID"])       
       setAnchorEl(null);
     };
   
-    const showBookInfo = (row) => {
-      console.log(row)
+    const updatebook = (row) => {  
+      setSelectedInfoValue(row)
+      setUpdateDialogOpen(true)    
+      setAnchorE2(null);
+    };
+    const showBookInfo = (row) => { 
       setSelectedInfoValue(row)
       setInfoDialogOpen(true)
+      setAnchorE2(null);
     };
 
     React.useEffect(() => {
@@ -317,7 +365,7 @@ export default function BookFrame() {
                             
                             <TableRow key={row.book_item.isbn}>
                                 <TableCell>
-                                    <IconButton onClick={handleClick}> 
+                                    <IconButton onClick={(event ) => {handleAllMoreClick(event, row) }}> 
                                         <MoreVert/>
                                     </IconButton>
                                     <AllBooksMenu/>
@@ -338,10 +386,18 @@ export default function BookFrame() {
             </Grid>
 
             </Grid>
-            <InfoDialog selectedValue={selectedInfoValue} open={infoDialogOpen} onClose={handleClose} />            
+        <InfoDialog selectedValue={selectedInfoValue} open={infoDialogOpen} onClose={handleClose} />          
+        <BookUpdateDialog selectedValue={selectedInfoValue} open={updateDialogOpen}  onClose={handleClose} onUpdateData={updateDialogData} />            
         <Box pt={4}>
             <Copyright />
         </Box>
+        <Snackbar
+          anchorOrigin={{vertical: 'top', horizontal: 'center' }}
+          open={deleteopen} 
+          message="Book Deleted Successfully"
+          autoHideDuration={1000}
+          key="topcenter"
+        />
      </Container>
     )
 }
