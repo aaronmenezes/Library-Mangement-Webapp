@@ -19,6 +19,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';  
 import IconButton from '@material-ui/core/IconButton';
 import AddCircle from '@material-ui/icons/AddCircle';
+import TextField from '@material-ui/core/TextField';
 import Info from '@material-ui/icons/Info';    
 import BookInfoDialog from './BookInfoDialog';
 import BookImportDialog from './BookImportDialog';
@@ -121,6 +122,16 @@ const useStyles = makeStyles((theme) => ({
     extendedIcon: {
       marginRight: theme.spacing(1),
     },
+    formgrid:{ 
+      '& .MuiTextField-root': {
+        margin: theme.spacing(1),
+        width: '25ch',
+      },
+      '& .Button-root': {
+        margin: theme.spacing(1),
+        width: '25ch',
+      },
+    }
   }));
  
    async function insertList(){
@@ -147,11 +158,19 @@ export default function ImportBookFrame() {
   const [selectedInfoValue, setSelectedInfoValue] = React.useState(null); 
   const [infoDialogOpen, setInfoDialogOpen] = React.useState(false);
   const [importDialogOpen, setImportDialogOpen] = React.useState(false); 
+  const [searchParams, setSearchParams] = React.useState({}); 
   
-    const importlist = async () => {   
-      fetch(process.env.REACT_APP_API_URL+'getApiBookList')
+    const importlist = async () => {
+      let queryString="?"
+      for(var key in searchParams){ 
+          queryString += key+"="+searchParams[key]
+          queryString +="&&" 
+      } 
+      console.log(queryString)
+      fetch(process.env.REACT_APP_API_URL+'getApiBookList'+queryString)
         .then(data => data.json())  
         .then(data=>{
+            console.log(data)
              bookImportList.splice(0,bookImportList.length) 
             setBookImportList(data)
         })
@@ -174,13 +193,33 @@ export default function ImportBookFrame() {
         setSelectedInfoValue(row)
         setImportDialogOpen(true) 
     }
+    const handleParamChange=(event)=>{
+      let id = (event.target.id).replace("-input","")      
+      if(event.target.value=="")
+      delete  searchParams[id]
+      else searchParams[id]=event.target.value
+      console.log(searchParams)
+    }
     return(
     <Container maxWidth="lg" className={classes.container}>
            <Grid container spacing={3}>             
                 <Grid item xs={12} md={4} lg={12}>            
                     <Paper className={searchFixedHeight}>            
-                        <Title>Import Books from Frappe </Title> 
-                        <Button variant="contained" color="primary" onClick={importlist}> Import  </Button>
+                        <Title>Import Books from Frappe </Title>
+                         <div className={classes.formgrid}>
+                          <TextField  id="title-input"  label="Title"   type="text" onChange={handleParamChange} />
+                          <TextField  id="authors-input"  label="Author"   type="text" onChange={handleParamChange}/>
+                          <TextField  id="publisher-input"  label="Publisher"  type="text" onChange={handleParamChange} />
+                          <TextField  id="isbn-input"  label="isbn"  type="numer" onChange={handleParamChange}/>
+                          <TextField  id="page-input"  label="Page"  type="number" onChange={handleParamChange} />
+                        </div>
+                        
+                        <Button variant="contained" 
+                          color="primary"
+                           style={{width:"20%",marginTop:"20px"}}
+                           onClick={importlist}>
+                          Search  
+                        </Button>
                     </Paper>
                 </Grid>
                 <Grid item xs={12} md={4} lg={12}>            
