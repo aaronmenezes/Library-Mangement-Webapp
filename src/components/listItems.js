@@ -7,7 +7,7 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import ImportContacts from '@material-ui/icons/ImportContacts';
 import PeopleIcon from '@material-ui/icons/People';
 import BarChartIcon from '@material-ui/icons/BarChart';
-import LayersIcon from '@material-ui/icons/Layers';
+import SystemUpdateAlt from '@material-ui/icons/SystemUpdateAlt';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 
 export const mainListItems = (
@@ -36,11 +36,11 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Reports" />
     </ListItem>
-    <ListItem button  name="Integrations">
-      <ListItemIcon  name="Integrations">
-        <LayersIcon />
+    <ListItem button  name="ImportBooks">
+      <ListItemIcon  name="ImportBooks">
+        <SystemUpdateAlt />
       </ListItemIcon>
-      <ListItemText primary="Integrations" />
+      <ListItemText primary="ImportBooks" />
     </ListItem>
   </div>
 );

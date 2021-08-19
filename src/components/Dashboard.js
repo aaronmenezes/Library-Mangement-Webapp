@@ -18,6 +18,7 @@ import { mainListItems, secondaryListItems } from './listItems';
 import DashFrame from './DashFrame';
 import BookFrame from './BookFrame';
 import MemberFrame from './MemberFrame';
+import ImportBookFrame from './ImportBookFrame';
 
 function Copyright() {
   return (
@@ -180,7 +181,7 @@ export default function Dashboard() {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        {category =="books"?<BookFrame/>:category =="members"?<MemberFrame/>:category =="reports"?<MemberFrame/>:<DashFrame/>}
+        {category =="books"?<BookFrame/>:category =="members"?<MemberFrame/>:category =="reports"?<MemberFrame/>:category =="importbooks"?<ImportBookFrame/>:<DashFrame/>}
       </main>
     </div>
   );
