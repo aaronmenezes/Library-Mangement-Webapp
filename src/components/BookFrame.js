@@ -240,10 +240,11 @@ export default function BookFrame() {
         getUpdatedCheckBooks() 
        } 
     }
-    const checkinSubmit = async (userId,bookId) => {  
+    const checkinSubmit = async (userId,bookId,bagId) => {  
       const data = await checkin({
         userId,
-        bookId
+        bookId,
+        bagId
       }); 
        if(data["status"] == "success"){  
         getUpdatedMemberList()
@@ -263,8 +264,8 @@ export default function BookFrame() {
       setAnchorE2(null);
     };
 
-    const returnbook = (row) => {  
-      checkinSubmit(row["member_item"]["id"],row["book_item"]["bookID"])       
+    const returnbook = (row) => {   
+      checkinSubmit(row["member_item"]["id"],row["book_item"]["bookID"],row["bag_item"]["bagId"])       
       setAnchorEl(null);
     };
   
