@@ -224,7 +224,9 @@ export default function BookFrame() {
         bookId
       }); 
        if(data["status"] == "success"){   
-        // update lists
+          getUpdatedMemberList()
+          getUpdatedInventory()
+          getUpdatedCheckBooks()
        } 
     }
     const updateSubmit = async (bookId,bookDetails) => {  
@@ -233,7 +235,9 @@ export default function BookFrame() {
         bookDetails
       }); 
        if(data["status"] == "success"){   
-        // update lists
+        getUpdatedMemberList()
+        getUpdatedInventory()
+        getUpdatedCheckBooks() 
        } 
     }
     const checkinSubmit = async (userId,bookId) => {  
@@ -241,8 +245,10 @@ export default function BookFrame() {
         userId,
         bookId
       }); 
-       if(data["status"] == "success"){   
-        // update lists
+       if(data["status"] == "success"){  
+        getUpdatedMemberList()
+        getUpdatedInventory()
+        getUpdatedCheckBooks()
        } 
     }
     const deleteSubmit = async (bookId) => {  
@@ -277,7 +283,8 @@ export default function BookFrame() {
       setInfoDialogOpen(true)
       setAnchorE2(null);
     };
-    React.useEffect(() => { 
+
+    const getUpdatedCheckBooks = ()=>{
       fetch(process.env.REACT_APP_API_URL+'getCheckedBooks')
       .then(results => results.json())
       .then(data => { 
@@ -287,23 +294,22 @@ export default function BookFrame() {
           bagrows.push(createBagData(  item.book_item,item.bag_item,item.member_item)); 
          });
          setBookBagList(bagrows)
+      });    
+    }
+    const getUpdatedInventory = ()=>{ 
+      fetch(process.env.REACT_APP_API_URL+'getBooksInventory')
+      .then(results => results.json())
+      .then(data => {
+        bookList.splice(0,bookList.length)
+        let bookrows=[] 
+          data["booklist"].forEach((item) => { 
+            bookrows.push(createData(item.book_item,item.inventory_item)); 
+        });
+      setBookList(bookrows) 
       });
-    }, []);
-    
-    React.useEffect(() => {
-        fetch(process.env.REACT_APP_API_URL+'getBooksInventory')
-          .then(results => results.json())
-          .then(data => {
-            bookList.splice(0,bookList.length)
-            let bookrows=[] 
-              data["booklist"].forEach((item) => { 
-                bookrows.push(createData(item.book_item,item.inventory_item)); 
-            });
-           setBookList(bookrows) 
-          });
-      }, []);
-   
-    React.useEffect(() => {
+    }
+
+    const getUpdatedMemberList =()=>{
       fetch(process.env.REACT_APP_API_URL+'getMemberList')
       .then(results => results.json())
       .then(data => {  
@@ -313,8 +319,13 @@ export default function BookFrame() {
             memberRows.push(createMemberData(item.id,item.user_id,item.join_date,item.first_name,item.last_name,item.dob,item.role,item.debt));
           }); 
          setMemberList(memberRows) 
-      });
-  }, []);
+      }); 
+    }
+    React.useEffect(() => { getUpdatedCheckBooks ()}, []);
+    
+    React.useEffect(() => {getUpdatedInventory ()}, []);
+   
+    React.useEffect(() => {getUpdatedMemberList()}, []);
 
     function CheckoutMenu(){
      return (<Menu
