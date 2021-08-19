@@ -14,7 +14,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { useHistory } from "react-router-dom"; 
+import { useHistory } from "react-router-dom";  
 
 function Copyright() {
   return (
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
   },
   image: {
-    backgroundImage: 'url(https://source.unsplash.com/random)',
+    //backgroundImage: 'url(https://source.unsplash.com/random)', 
     backgroundRepeat: 'no-repeat',
     backgroundColor:
       theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 async function loginUser(credentials) {
-    return fetch('http://localhost:8080/signin', {
+    return fetch(process.env.REACT_APP_API_URL+'signin', {
       method: 'POST',
       headers: {
         'mode':'no-cors',
@@ -94,7 +94,7 @@ export default function SignIn({ setToken }) {
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
+      <Grid item xs={false} sm={4} md={7} className={classes.image}  />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>

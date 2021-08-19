@@ -39,14 +39,14 @@ function Copyright() {
   }
   
 async function deleteBook(bookId) {
-  let url = 'http://localhost:8080/deleteBook?bookId=' + bookId;
+  let url = process.env.REACT_APP_API_URL+'deleteBook?bookId=' + bookId;
   console.log(url)
   return fetch(url)  
     .then(data => data.json()) 
  }
 
 async function checkin(checkindetils) {
-  return fetch('http://localhost:8080/checkin', {
+  return fetch(process.env.REACT_APP_API_URL+'checkin', {
     method: 'POST',
     headers: {
       'mode':'no-cors',
@@ -57,8 +57,8 @@ async function checkin(checkindetils) {
     .then(data => data.json()) 
  }
 
- async function updateBookDetails(details) { 
-  return fetch('http://localhost:8080/updateBookDetails', {
+ async function updateBookDetails(details) {  
+  return fetch(process.env.REACT_APP_API_URL+'updateBookDetails', {
     method: 'POST',
     headers: {
       'mode':'no-cors',
@@ -70,7 +70,7 @@ async function checkin(checkindetils) {
  }
   
  async function checkOutBook(details) { 
-  return fetch('http://localhost:8080/checkout', {
+  return fetch(process.env.REACT_APP_API_URL+'checkout', {
     method: 'POST',
     headers: {
       'mode':'no-cors',
@@ -172,8 +172,8 @@ const useStyles = makeStyles((theme) => ({
   function createBagData(book_item,bag_item,member_item) { 
     return {book_item,bag_item,member_item};
   }
-  function createMemberData(id,user_id,join_date,first_name,last_name,dob,role) {  
-    return {id,user_id,join_date,first_name,last_name,dob,role};
+  function createMemberData(id,user_id,join_date,first_name,last_name,dob,role,debt) {  
+    return {id,user_id,join_date,first_name,last_name,dob,role,debt};
   }
     
 
@@ -286,9 +286,21 @@ export default function BookFrame() {
       setInfoDialogOpen(true)
       setAnchorE2(null);
     };
-
+    React.useEffect(() => { 
+      fetch(process.env.REACT_APP_API_URL+'getCheckedBooks')
+      .then(results => results.json())
+      .then(data => { 
+        bookBagList.splice(0,bookBagList.length)
+        let bagrows=[]
+        data["booklist"].forEach((item) => {   
+          bagrows.push(createBagData(  item.book_item,item.bag_item,item.member_item)); 
+         });
+         setBookBagList(bagrows)
+      });
+    }, []);
+    
     React.useEffect(() => {
-        fetch('http://localhost:8080/getBooksInventory')
+        fetch(process.env.REACT_APP_API_URL+'getBooksInventory')
           .then(results => results.json())
           .then(data => {
             bookList.splice(0,bookList.length)
@@ -300,18 +312,7 @@ export default function BookFrame() {
            setBookList(bookrows) 
           });
       }, []);
-    React.useEffect(() => {
-        fetch('http://localhost:8080/getCheckedBooks')
-        .then(results => results.json())
-        .then(data => { 
-          bookBagList.splice(0,bookBagList.length)
-          let bagrows=[]
-          data["booklist"].forEach((item) => {   
-            bagrows.push(createBagData(  item.book_item,item.bag_item,item.member_item)); 
-           });
-           setBookBagList(bagrows)
-        });
-    }, []);
+   
     React.useEffect(() => {
       fetch('http://localhost:8080/getMemberList')
       .then(results => results.json())
@@ -319,7 +320,7 @@ export default function BookFrame() {
           memberList.splice(0,memberList.length)
           let memberRows=[]
           data["memberlist"].forEach((item) => {   
-            memberRows.push(createMemberData(item.id,item.user_id,item.join_date,item.first_name,item.last_name,item.dob,item.role));
+            memberRows.push(createMemberData(item.id,item.user_id,item.join_date,item.first_name,item.last_name,item.dob,item.role,item.debt));
           }); 
          setMemberList(memberRows) 
       });

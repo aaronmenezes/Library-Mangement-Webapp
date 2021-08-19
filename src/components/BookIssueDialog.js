@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
  
 
 const useStyles =  makeStyles((theme) => ({
@@ -25,6 +26,12 @@ const useStyles =  makeStyles((theme) => ({
     top: theme.spacing(1),
     color: theme.palette.grey[500],
   },
+  paper: {
+    padding: theme.spacing(1),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+  },
 }));
 
 export default function BookUpdateDialog(props) { 
@@ -33,6 +40,16 @@ export default function BookUpdateDialog(props) {
     const classes = useStyles();  
 
     const Details = (prop)=>{    
+      var pairs = [];
+        for(var key in prop.data){
+          pairs.push(<p>{key} : {prop.data[key]}</p>);
+        } 
+      return (
+             <div className="Data-item">{pairs}</div>
+      );
+    }
+
+    const MemberDetails = (prop)=>{    
       var pairs = [];
         for(var key in prop.data){
           pairs.push(<p>{key} : {prop.data[key]}</p>);
@@ -77,16 +94,15 @@ export default function BookUpdateDialog(props) {
         <DialogContent dividers>    
         <Grid container spacing={3}> 
         <Grid item xs={12} md={4} lg={6}> 
-          <Typography gutterBottom > 
+          {/* <Typography gutterBottom >  */}
+          <Paper className={classes.paper} elevation={3}>
                         {!checkAvailable()?
                           <div>Copy Not Available</div> :
-                            <div>
-                          <div>Copy Available</div>
-                          <div>Select Member Id </div>
+                            <div> 
                           <TextField
                             id="member-list"
                             select
-                            label="Select"
+                            label="Select Member"
                             value={member}
                             onChange={handleMemberChange}
                             helperText="Please select member"
@@ -101,11 +117,20 @@ export default function BookUpdateDialog(props) {
                           </div>
                           
                         }
-          </Typography>
+                        </Paper>
+                        <Paper className={classes.paper} elevation={3} style={{marginTop:"20px"}}>
+                          <h3>Member Details</h3>
+                        <MemberDetails data={member!=null?member:{}}>
+                        </MemberDetails>   
+
+                        </Paper>
+          {/* </Typography> */}
           </Grid>
           <Grid item xs={12} md={4} lg={6}>  
+            <Paper className={classes.paper} elevation={3}>
               <h3>Books Details</h3>
               <Details data={selectedValue!=null?selectedValue["book_item"]:{}}></Details>         
+            </Paper>
           </Grid>
           </Grid> 
         </DialogContent>
