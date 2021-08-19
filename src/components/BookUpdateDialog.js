@@ -31,24 +31,24 @@ export default function BookUpdateDialog(props) {
     const classes = useStyles(); 
     const Details = (prop)=>{    
      
-            var pairs = [];
-              for(var key in prop.data){
-                if(key!="bookID")
-                pairs.push(
-                  <TextField
-                  autoFocus
-                  margin="dense"
-                  id= {key}
-                  label= {key.replace("_"," ")} 
-                  fullWidth 
-                  defaultValue = {prop.data[key]}
-                  onChange={(event)=>updateData(event)}                  
-                /> 
-                ) 
-              } 
-            return (
-                   <div className="Data-item">{pairs}</div>
-            );
+        var pairs = [];
+          for(var key in prop.data){
+            if(key!="bookID")
+            pairs.push(
+              <TextField
+              autoFocus
+              margin="dense"
+              id= {key}
+              label= {key.replace("_"," ")} 
+              fullWidth 
+              defaultValue = {prop.data[key]}
+              onChange={(event)=>updateData(event)}                  
+            /> 
+            ) 
+          } 
+        return (
+                <div className="Data-item">{pairs}</div>
+        );
     }
     
     const updateData = (event) => { 

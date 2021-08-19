@@ -39,8 +39,7 @@ function Copyright() {
   }
   
 async function deleteBook(bookId) {
-  let url = process.env.REACT_APP_API_URL+'deleteBook?bookId=' + bookId;
-  console.log(url)
+  let url = process.env.REACT_APP_API_URL+'deleteBook?bookId=' + bookId; 
   return fetch(url)  
     .then(data => data.json()) 
  }
@@ -191,10 +190,6 @@ export default function BookFrame() {
     const [updateDialogOpen, setUpdateDialogOpen] = React.useState(false);
     const [issueDialogOpen, setIssueDialogOpen] = React.useState(false);
     const [selectedInfoValue, setSelectedInfoValue] = React.useState(null); 
-    
-    const handleClick = (event) => {
-      setAnchorE2(event.currentTarget);
-    };
   
     const handleClose = () => {
       setAnchorEl(null);
@@ -210,8 +205,7 @@ export default function BookFrame() {
       updateSubmit(dataid,data)
     };
   
-    function issueDialogData(data){
-      console.log(data)
+    function issueDialogData(data){ 
       checkoutsubmit(data.selected_member.id,data.book_item.bookID)
     };
 
@@ -228,8 +222,7 @@ export default function BookFrame() {
       const data = await checkOutBook({
         userId,
         bookId
-      });
-      console.log(data)
+      }); 
        if(data["status"] == "success"){   
         // update lists
        } 
@@ -238,8 +231,7 @@ export default function BookFrame() {
       const data = await updateBookDetails({
         bookId,
         bookDetails
-      });
-      console.log(data)
+      }); 
        if(data["status"] == "success"){   
         // update lists
        } 
@@ -248,8 +240,7 @@ export default function BookFrame() {
       const data = await checkin({
         userId,
         bookId
-      });
-      console.log(data)
+      }); 
        if(data["status"] == "success"){   
         // update lists
        } 
@@ -304,8 +295,7 @@ export default function BookFrame() {
           .then(results => results.json())
           .then(data => {
             bookList.splice(0,bookList.length)
-            let bookrows=[]
-              console.log(data["booklist"]) 
+            let bookrows=[] 
               data["booklist"].forEach((item) => { 
                 bookrows.push(createData(item.book_item,item.inventory_item)); 
             });
@@ -314,7 +304,7 @@ export default function BookFrame() {
       }, []);
    
     React.useEffect(() => {
-      fetch('http://localhost:8080/getMemberList')
+      fetch(process.env.REACT_APP_API_URL+'getMemberList')
       .then(results => results.json())
       .then(data => {  
           memberList.splice(0,memberList.length)
