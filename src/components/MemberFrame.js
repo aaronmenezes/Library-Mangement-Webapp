@@ -17,9 +17,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';  
 import IconButton from '@material-ui/core/IconButton';
 import MoreVert from '@material-ui/icons/MoreVert';   
+import AddIcon from '@material-ui/icons/Add';
+import Fab from '@material-ui/core/Fab';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MemberUpdateDialog from './MemberUpdateDialog';
+import MemberInsertDialog from './MemberInsertDialog';
 import Snackbar from '@material-ui/core/Snackbar';
 
 function Copyright() {
@@ -113,6 +116,9 @@ const useStyles = makeStyles((theme) => ({
     },
     fixedHeight: {
       height: 450,
+    }, 
+    extendedIcon: {
+      marginRight: theme.spacing(1),
     },
   }));
   async function deleteMember(id) {
@@ -120,7 +126,17 @@ const useStyles = makeStyles((theme) => ({
     return fetch(url)  
       .then(data => data.json()) 
    }
-  
+   async function insertMemberDetails(details){
+    return fetch(process.env.REACT_APP_API_URL+'signup', {
+      method: 'POST',
+      headers: {
+        'mode':'no-cors',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(details)
+    })
+    .then(data => data.json()) 
+  }
   async function updateMemberDetails(details) {  
     return fetch(process.env.REACT_APP_API_URL+'updateMemberDetails', {
       method: 'POST',
@@ -145,6 +161,7 @@ export default function MemberFrame() {
   const [selectedMenuRow, setSelectedMenuRow] = React.useState();
   const [selectedInfoValue, setSelectedInfoValue] = React.useState(null); 
   const [updateDialogOpen, setUpdateDialogOpen] = React.useState(false);
+  const [insertDialogOpen, setInsertDialogOpen] = React.useState(false);
   const [deleteopen, setDeleteopen] = React.useState();
 
  
@@ -175,9 +192,13 @@ export default function MemberFrame() {
       setAnchorE1(event.currentTarget);
     };
 
+    const handleAddMember = (event)=>{
+      setInsertDialogOpen(true)
+    }
     const handleClose = (event,row) => {
       setAnchorE1(null);
       setUpdateDialogOpen(false);
+      setInsertDialogOpen(false);
       };
 
     function updateDialogData(data){   
@@ -186,10 +207,22 @@ export default function MemberFrame() {
       updateSubmit(dataid,data)
     };
 
+    function insertDialogData(data){   
+      insertSubmit(data.user_id,data.psswd,data.first_name,data.last_name,data.dob)
+    };
+
     const updateSubmit = async (memberId,memberDetails) => {  
       const data = await updateMemberDetails({
         memberId,
         memberDetails
+      }); 
+        if(data["status"] == "success"){   
+        // update lists
+        } 
+    }  
+    const insertSubmit = async (user_id,psswd,first_name,last_name,dob) => {  
+      const data = await insertMemberDetails({
+        user_id,psswd,first_name,last_name,dob
       }); 
         if(data["status"] == "success"){   
         // update lists
@@ -212,10 +245,7 @@ export default function MemberFrame() {
             onClose={handleClose}
           >
             <MenuItem onClick={()=>{updatemember(selectedMenuRow)}} >Update Member Details</MenuItem>
-            <MenuItem onClick={()=> {deletemember(selectedMenuRow)}}>Delete this member</MenuItem> 
-          {/* <MenuItem onClick={()=>{issuebook(selectedMenuRow)}}>Issue Book</MenuItem>
-          <MenuItem onClick={()=>{updatebook(selectedMenuRow)}}>Update Book Info</MenuItem>
-          <MenuItem onClick={()=> {deletebook(selectedMenuRow)}}>Delete this Book</MenuItem>  */}
+            <MenuItem onClick={()=> {deletemember(selectedMenuRow)}}>Delete this member</MenuItem>  
         </Menu>);
       }
 
@@ -223,13 +253,20 @@ export default function MemberFrame() {
     <Container maxWidth="lg" className={classes.container}>
            <Grid container spacing={3}> 
             <Grid item xs={12} md={4} lg={12}>
+
+            
             <Paper className={fixedHeightPaper}>            
                     <Title>All Library Members </Title> 
+                    
                     <TableContainer className={classes.tablecontainer}>
                     <Table  stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
-                                <TableCell>  </TableCell> 
+                                <TableCell> 
+                                  <Fab color="secondary" aria-label="add" onClick={(event ) => {handleAddMember(event) }}> 
+                                  <AddIcon />
+                                  </Fab>
+                                </TableCell> 
                                 <TableCell >User Id</TableCell>
                                 <TableCell>First name</TableCell> 
                                 <TableCell>Last Name</TableCell> 
@@ -265,6 +302,7 @@ export default function MemberFrame() {
             </Grid>
             </Grid>
             <MemberUpdateDialog selectedValue={selectedInfoValue} open={updateDialogOpen}  onClose={handleClose} onUpdateData={updateDialogData} />            
+            <MemberInsertDialog open={insertDialogOpen}  onClose={handleClose} onInsertData={insertDialogData} />            
           <Box pt={4}>
             <Copyright />
           </Box>
