@@ -1,42 +1,29 @@
 import React from 'react';
 import clsx from 'clsx';
-
 import Title from './Title';
-import { makeStyles } from '@material-ui/core/styles'; 
-import Typography from '@material-ui/core/Typography'; 
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
-import Box from '@material-ui/core/Box';
-import Table from '@material-ui/core/Table'; 
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';  
-import IconButton from '@material-ui/core/IconButton';
-import MoreVert from '@material-ui/icons/MoreVert';  
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Snackbar from '@material-ui/core/Snackbar';
+import { makeStyles } from '@material-ui/core/styles';  
+import {Paper,Grid,Typography,Container,Box} from '@material-ui/core';
+import {Table ,TableBody ,TableCell,TableContainer,TableHead,TableRow} from '@material-ui/core';  
+import {Link, IconButton,Snackbar} from '@material-ui/core'; 
+import {Menu ,MenuItem} from '@material-ui/core'; 
+import MoreVert from '@material-ui/icons/MoreVert'; 
 import InfoDialog from './InfoDialog';
 import BookUpdateDialog from'./BookUpdateDialog';
 import BookIssueDialog from'./BookIssueDialog';
 
 
 function Copyright() {
-    return (
-      <Typography variant="body2" color="textSecondary" align="center">
-        {'Copyright © '}
-        <Link color="inherit" href="https://material-ui.com/">
-          Your Website
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
-    );
-  }
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="#">
+        Your Website
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
   
 async function deleteBook(bookId) {
   let url = process.env.REACT_APP_API_URL+'deleteBook?bookId=' + bookId; 
@@ -78,73 +65,9 @@ async function checkin(checkindetils) {
     body: JSON.stringify(details)
   })
   .then(data => data.json()) 
- }
-const drawerWidth = 240;
+ } 
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-      display: 'flex',
-    },
-    toolbar: {
-      paddingRight: 24, // keep right padding when drawer closed
-    },
-    toolbarIcon: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      padding: '0 8px',
-      ...theme.mixins.toolbar,
-    },
-    appBar: {
-      zIndex: theme.zIndex.drawer + 1,
-      transition: theme.transitions.create(['width', 'margin'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-    },
-    appBarShift: {
-      marginLeft: drawerWidth,
-      width: `calc(100% - ${drawerWidth}px)`,
-      transition: theme.transitions.create(['width', 'margin'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    },
-    menuButton: {
-      marginRight: 36,
-    },
-    menuButtonHidden: {
-      display: 'none',
-    },
-    title: {
-      flexGrow: 1,
-    },
-    drawerPaper: {
-      position: 'relative',
-      whiteSpace: 'nowrap',
-      width: drawerWidth,
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    },
-    drawerPaperClose: {
-      overflowX: 'hidden',
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      width: theme.spacing(7),
-      [theme.breakpoints.up('sm')]: {
-        width: theme.spacing(9),
-      },
-    },
-    appBarSpacer: theme.mixins.toolbar,
-    content: {
-      flexGrow: 1,
-      height: '100vh',
-      overflow: 'auto',
-    },
+const useStyles = makeStyles((theme) => ({ 
     container: {
       paddingTop: theme.spacing(4),
       paddingBottom: theme.spacing(4),
@@ -219,10 +142,7 @@ export default function BookFrame() {
     };
 
     const checkoutsubmit = async (userId,bookId) => {  
-      const data = await checkOutBook({
-        userId,
-        bookId
-      }); 
+      const data = await checkOutBook({ userId, bookId }); 
        if(data["status"] == "success"){   
           getUpdatedMemberList()
           getUpdatedInventory()
@@ -230,10 +150,7 @@ export default function BookFrame() {
        } 
     }
     const updateSubmit = async (bookId,bookDetails) => {  
-      const data = await updateBookDetails({
-        bookId,
-        bookDetails
-      }); 
+      const data = await updateBookDetails({ bookId,  bookDetails }); 
        if(data["status"] == "success"){   
         getUpdatedMemberList()
         getUpdatedInventory()
@@ -241,11 +158,7 @@ export default function BookFrame() {
        } 
     }
     const checkinSubmit = async (userId,bookId,bagId) => {  
-      const data = await checkin({
-        userId,
-        bookId,
-        bagId
-      }); 
+      const data = await checkin({ userId, bookId, bagId  }); 
        if(data["status"] == "success"){  
         getUpdatedMemberList()
         getUpdatedInventory()
@@ -265,7 +178,8 @@ export default function BookFrame() {
     };
 
     const returnbook = (row) => {   
-      checkinSubmit(row["member_item"]["id"],row["book_item"]["bookID"],row["bag_item"]["bagId"])       
+      if(row["bag_item"]["status"]=="1")
+        checkinSubmit(row["member_item"]["id"],row["book_item"]["bookID"],row["bag_item"]["bagId"])       
       setAnchorEl(null);
     };
   
@@ -342,13 +256,7 @@ export default function BookFrame() {
     }
 
     function AllBooksMenu(){
-      return (<Menu
-           id="booklist-menu"
-           anchorEl={anchorE2}
-           keepMounted
-           open={Boolean(anchorE2)}
-           onClose={handleClose}
-         >
+      return (<Menu id="booklist-menu"  anchorEl={anchorE2}  keepMounted open={Boolean(anchorE2)} onClose={handleClose} >
          <MenuItem onClick={()=>{issuebook(selectedMenuRow)}}>Issue Book</MenuItem>
          <MenuItem onClick={()=>{updatebook(selectedMenuRow)}}>Update Book Info</MenuItem>
          <MenuItem onClick={()=> {deletebook(selectedMenuRow)}}>Delete this Book</MenuItem> 
@@ -360,43 +268,43 @@ export default function BookFrame() {
         <Grid container spacing={3}> 
             <Grid item xs={12} md={4} lg={12}>
             <Paper className={fixedHeightPaper}>            
-                    <Title>Checked Books </Title>            
-                      <TableContainer className={classes.tablecontainer}>
-                        <Table  stickyHeader aria-label="sticky table">
-                          <TableHead>
-                                <TableRow>
-                                    <TableCell width="5%">  </TableCell> 
-                                    <TableCell width="30%"> Title </TableCell>
-                                    <TableCell width="20%"> Authors </TableCell> 
-                                    <TableCell width="20%"> Member</TableCell> 
-                                    <TableCell width="10%"> Status </TableCell> 
-                                    <TableCell width="30%"> Issue Date </TableCell> 
-                                    <TableCell width="40%"> ReturnDate </TableCell> 
-                                    <TableCell width="15%"> ISBN</TableCell>  
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                            {bookBagList.map((row) => (
-                                
-                                <TableRow key={row.bag_item.bagId}>
-                                    <TableCell  width="5%">
-                                        <IconButton aria-controls="simple-menu" aria-haspopup="true"  onClick={(event ) => {handleMoreClick(event, row) }}> 
-                                            <MoreVert/>
-                                        </IconButton>
-                                        <CheckoutMenu></CheckoutMenu>
-                                    </TableCell> 
-                                    <TableCell width="30%">{row.book_item.title}</TableCell>
-                                    <TableCell width="20%">{row.book_item.authors}</TableCell> 
-                                    <TableCell width="20%">{row.member_item.first_name + " " +row.member_item.last_name}</TableCell> 
-                                    <TableCell width="10%">{row.bag_item.status==1?"Issued":"Returned"}</TableCell> 
-                                    <TableCell width="30%">{row.bag_item.checkout_date}</TableCell> 
-                                    <TableCell width="40%">{row.bag_item.checkin_date?row.bag_item.checkin_date:"-"}</TableCell> 
-                                    <TableCell width="10%">{row.book_item.isbn}</TableCell>  
-                                </TableRow>
-                            ))}
-                            </TableBody> 
-                        </Table> 
-                        </TableContainer>
+              <Title>Checked Books </Title>            
+                <TableContainer className={classes.tablecontainer}>
+                  <Table  stickyHeader aria-label="sticky table">
+                    <TableHead>
+                      <TableRow>
+                          <TableCell width="5%">  </TableCell> 
+                          <TableCell width="30%"> Title </TableCell>
+                          <TableCell width="20%"> Authors </TableCell> 
+                          <TableCell width="20%"> Member</TableCell> 
+                          <TableCell width="10%"> Status </TableCell> 
+                          <TableCell width="30%"> Issue Date </TableCell> 
+                          <TableCell width="40%"> ReturnDate </TableCell> 
+                          <TableCell width="15%"> ISBN</TableCell>  
+                      </TableRow>
+                      </TableHead>
+                      <TableBody>
+                      {bookBagList.map((row) => (
+                          
+                        <TableRow key={row.bag_item.bagId}>
+                          <TableCell  width="5%">
+                              <IconButton aria-controls="simple-menu" aria-haspopup="true"  onClick={(event ) => {handleMoreClick(event, row) }}> 
+                                  <MoreVert/>
+                              </IconButton>
+                              <CheckoutMenu></CheckoutMenu>
+                          </TableCell> 
+                          <TableCell width="30%">{row.book_item.title}</TableCell>
+                          <TableCell width="20%">{row.book_item.authors}</TableCell> 
+                          <TableCell width="20%">{row.member_item.first_name + " " +row.member_item.last_name}</TableCell> 
+                          <TableCell width="10%">{row.bag_item.status==1?"Issued":"Returned"}</TableCell> 
+                          <TableCell width="30%">{row.bag_item.checkout_date}</TableCell> 
+                          <TableCell width="40%">{row.bag_item.checkin_date?row.bag_item.checkin_date:"-"}</TableCell> 
+                          <TableCell width="10%">{row.book_item.isbn}</TableCell>  
+                        </TableRow>
+                      ))}
+                      </TableBody> 
+                  </Table> 
+                  </TableContainer>
                 </Paper>
             </Grid>
              
@@ -407,33 +315,33 @@ export default function BookFrame() {
                     <Table  stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
-                                <TableCell>  </TableCell> 
-                                <TableCell width="30%"> Title </TableCell>
-                                <TableCell> Authors </TableCell> 
-                                <TableCell> Publisher </TableCell> 
-                                <TableCell width="20%"> Publication date </TableCell> 
-                                <TableCell width="15%"> No. of books </TableCell> 
-                                <TableCell width="15%"> No. Issued books </TableCell> 
-                                <TableCell width="5%"> ISBN</TableCell>  
+                              <TableCell>  </TableCell> 
+                              <TableCell width="30%"> Title </TableCell>
+                              <TableCell> Authors </TableCell> 
+                              <TableCell> Publisher </TableCell> 
+                              <TableCell width="20%"> Publication date </TableCell> 
+                              <TableCell width="15%"> No. of books </TableCell> 
+                              <TableCell width="15%"> No. Issued books </TableCell> 
+                              <TableCell width="5%"> ISBN</TableCell>  
                             </TableRow>
                         </TableHead>
                         <TableBody>
                         {bookList.map((row) => (
                             
                             <TableRow key={row.book_item.isbn}>
-                                <TableCell>
-                                    <IconButton onClick={(event ) => {handleAllMoreClick(event, row) }}> 
-                                        <MoreVert/>
-                                    </IconButton>
-                                    <AllBooksMenu/>
-                                </TableCell> 
-                                <TableCell  >  {row.book_item.title}  </TableCell>
-                                <TableCell>{row.book_item.authors}</TableCell> 
-                                <TableCell>{row.book_item.publisher}</TableCell> 
-                                <TableCell>{row.book_item.publication_date}</TableCell> 
-                                <TableCell>{row.inventory_item.count}</TableCell> 
-                                <TableCell>{row.inventory_item.checkout_count}</TableCell> 
-                                <TableCell>{row.book_item.isbn}</TableCell>  
+                              <TableCell>
+                                  <IconButton onClick={(event ) => {handleAllMoreClick(event, row) }}> 
+                                      <MoreVert/>
+                                  </IconButton>
+                                  <AllBooksMenu/>
+                              </TableCell> 
+                              <TableCell  >  {row.book_item.title}  </TableCell>
+                              <TableCell>{row.book_item.authors}</TableCell> 
+                              <TableCell>{row.book_item.publisher}</TableCell> 
+                              <TableCell>{row.book_item.publication_date}</TableCell> 
+                              <TableCell>{row.inventory_item.count}</TableCell> 
+                              <TableCell>{row.inventory_item.checkout_count}</TableCell> 
+                              <TableCell>{row.book_item.isbn}</TableCell>  
                             </TableRow>
                         ))}
                         </TableBody> 

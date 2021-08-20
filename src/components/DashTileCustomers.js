@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles'; 
 import Title from './Title';
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, Tooltip,  ResponsiveContainer } from 'recharts';
 
 function preventDefault(event) {
   event.preventDefault();
@@ -62,7 +62,6 @@ export default function DashTileCustomers(props) {
     </React.Fragment>
   );
 }
-
 DashTileCustomers.propTypes = {
   categorySwitch: PropTypes.func.isRequired ,
   hideLink :PropTypes.bool,

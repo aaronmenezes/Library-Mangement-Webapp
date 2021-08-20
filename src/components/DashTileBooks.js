@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';  
 import { useTheme } from '@material-ui/core/styles'; 
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import Title from './Title';
 import Link from '@material-ui/core/Link';
  
@@ -9,7 +9,6 @@ import Link from '@material-ui/core/Link';
 function preventDefault(event) {
   event.preventDefault();
 }
-
 
 export default function DashTileBooks(props) {
   const { categorySwitch ,hideLink,bookDataReady} = props;
@@ -76,7 +75,6 @@ const CustomTooltip = ({ active, payload, label }) => {
     </React.Fragment>
   );
 }
-
 DashTileBooks.propTypes = {
   categorySwitch: PropTypes.func.isRequired,
   hideLink :PropTypes.bool,

@@ -1,16 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types'; 
-import { makeStyles } from '@material-ui/core/styles'; 
-import Button from '@material-ui/core/Button'; 
-import DialogTitle from '@material-ui/core/DialogTitle'; 
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';   
-import CloseIcon from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField'; 
-import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';  
+import {Grid,Paper,Button, IconButton,TextField} from '@material-ui/core'; 
+import {DialogTitle ,DialogContent,DialogActions,Dialog }from '@material-ui/core';   
+import CloseIcon from '@material-ui/icons/Close';  
  
 
 const useStyles =  makeStyles((theme) => ({
@@ -65,7 +58,6 @@ export default function BookImportDialog(props) {
     }
  
     return (
-       
       <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" className={classes.root} open={open} fullWidth="md" maxWidth="md">
         <DialogTitle id="simple-dialog-title">Import Book</DialogTitle>
         <IconButton aria-label="close" className={classes.closeButton}  onClick={handleClose}>
@@ -73,21 +65,21 @@ export default function BookImportDialog(props) {
         </IconButton>
         <DialogContent dividers>    
         <Grid container spacing={3}> 
-        <Grid item xs={12} md={4} lg={6}>  
+         <Grid item xs={12} md={4} lg={6}>  
             <Paper className={classes.paper} elevation={3} >
               <h3>Inventory Details</h3>
               <p> Book Count in Inventory : {selectedValue!=null?selectedValue["inventory_count"]:0}</p>
               <p> Enter Count to import to Inventory : </p>
               <TextField
-                            id="member-list" 
-                            label=" "                              
-                            type="number"
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
-                            onChange={handleCountChange}
-                            helperText="Please enter import count"
-                          />
+                id="member-list" 
+                label=" "                              
+                type="number"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={handleCountChange}
+                helperText="Please enter import count"
+              />
             </Paper>  
           </Grid>
           <Grid item xs={12} md={4} lg={6}>  

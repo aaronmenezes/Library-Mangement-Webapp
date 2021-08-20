@@ -1,19 +1,12 @@
-import React from 'react';
+import React from 'react'; 
+import clsx from 'clsx';    
 import PropTypes from 'prop-types'; 
-import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableContainer from '@material-ui/core/TableContainer'; 
-import IconButton from '@material-ui/core/IconButton';
-import MoreVert from '@material-ui/icons/MoreVert';  
 import Title from './Title';
-import clsx from 'clsx';  
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';  
+import { makeStyles } from '@material-ui/core/styles'; 
+import {Table ,TableBody ,TableCell,TableContainer,TableHead,TableRow} from '@material-ui/core';  
+import {Link, IconButton} from '@material-ui/core'; 
+import {Menu ,MenuItem} from '@material-ui/core'; 
+import MoreVert from '@material-ui/icons/MoreVert'; 
 import InfoDialog from './InfoDialog';
 
 function preventDefault(event) {
@@ -21,50 +14,50 @@ function preventDefault(event) {
 }
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-      display: 'flex',
-    },
-     
-    content: {
-      flexGrow: 1,
-      height: '100vh',
-      overflow: 'auto',
-    },
-    container: {
-      paddingTop: theme.spacing(4),
-      paddingBottom: theme.spacing(4),
-    },
-    tablecontainer:{
-        maxHeight: 500,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      display: 'flex',
-      overflow: 'auto',
-      flexDirection: 'column',
-    },
-    fixedHeight: {
-      height: 450,
-    },
+  root: {
+    display: 'flex',
+  },
     
-  }));
+  content: {
+    flexGrow: 1,
+    height: '100vh',
+    overflow: 'auto',
+  },
+  container: {
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
+  },
+  tablecontainer:{
+      maxHeight: 500,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+  },
+  fixedHeight: {
+    height: 450,
+  },
+  
+}));
  
 
-  function createBagData(book_item,bag_item,member_item) { 
-    return {book_item,bag_item,member_item};
-  }
-   
-  async function checkin(checkindetils) {
-    return fetch(process.env.REACT_APP_API_URL+'checkin', {
-      method: 'POST',
-      headers: {
-        'mode':'no-cors',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(checkindetils)
-    })
-      .then(data => data.json()) 
-  }
+function createBagData(book_item,bag_item,member_item) { 
+  return {book_item,bag_item,member_item};
+}
+  
+async function checkin(checkindetils) {
+  return fetch(process.env.REACT_APP_API_URL+'checkin', {
+    method: 'POST',
+    headers: {
+      'mode':'no-cors',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(checkindetils)
+  })
+    .then(data => data.json()) 
+}
 
 export default function DashTileIssued(props) {
   const { categorySwitch } = props;
@@ -140,37 +133,36 @@ export default function DashTileIssued(props) {
       <TableContainer className={classes.tablecontainer}>
         <Table  stickyHeader aria-label="sticky table">
           <TableHead>
-                <TableRow>
-                    <TableCell width="5%">  </TableCell> 
-                    <TableCell width="30%"> Title </TableCell>
-                    <TableCell width="20%"> Authors </TableCell> 
-                    <TableCell width="20%"> Member</TableCell> 
-                    <TableCell width="10%"> Status </TableCell> 
-                    <TableCell width="30%"> Issue Date </TableCell> 
-                    <TableCell width="40%"> ReturnDate </TableCell> 
-                    <TableCell width="15%"> ISBN</TableCell>  
-                </TableRow>
-            </TableHead>
-            <TableBody>
-            {bookBagList.map((row) => (
-                
-                <TableRow key={row.bag_item.bagId}>
-                    <TableCell  width="5%">
-                        <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={(event ) => {handleMoreClick(event, row) }} > 
-                            <MoreVert/>
-                        </IconButton>
-                        <CheckoutMenu></CheckoutMenu>
-                    </TableCell> 
-                    <TableCell width="30%">{row.book_item.title}</TableCell>
-                    <TableCell width="20%">{row.book_item.authors}</TableCell> 
-                    <TableCell width="20%">{row.member_item.first_name + " " +row.member_item.last_name}</TableCell> 
-                    <TableCell width="10%">{row.bag_item.status==1?"Issued":"Returned"}</TableCell> 
-                    <TableCell width="30%">{row.bag_item.checkout_date}</TableCell> 
-                    <TableCell width="40%">{row.bag_item.checkin_date?row.bag_item.checkin_date:"-"}</TableCell> 
-                    <TableCell width="10%">{row.book_item.isbn}</TableCell>  
-                </TableRow>
-            ))}
-            </TableBody> 
+            <TableRow>
+              <TableCell width="5%">  </TableCell> 
+              <TableCell width="30%"> Title </TableCell>
+              <TableCell width="20%"> Authors </TableCell> 
+              <TableCell width="20%"> Member</TableCell> 
+              <TableCell width="10%"> Status </TableCell> 
+              <TableCell width="30%"> Issue Date </TableCell> 
+              <TableCell width="40%"> ReturnDate </TableCell> 
+              <TableCell width="15%"> ISBN</TableCell>  
+            </TableRow>
+          </TableHead>
+          <TableBody>
+          {bookBagList.map((row) => (              
+            <TableRow key={row.bag_item.bagId}>
+                <TableCell  width="5%">
+                    <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={(event ) => {handleMoreClick(event, row) }} > 
+                        <MoreVert/>
+                    </IconButton>
+                    <CheckoutMenu></CheckoutMenu>
+                </TableCell> 
+                <TableCell width="30%">{row.book_item.title}</TableCell>
+                <TableCell width="20%">{row.book_item.authors}</TableCell> 
+                <TableCell width="20%">{row.member_item.first_name + " " +row.member_item.last_name}</TableCell> 
+                <TableCell width="10%">{row.bag_item.status==1?"Issued":"Returned"}</TableCell> 
+                <TableCell width="30%">{row.bag_item.checkout_date}</TableCell> 
+                <TableCell width="40%">{row.bag_item.checkin_date?row.bag_item.checkin_date:"-"}</TableCell> 
+                <TableCell width="10%">{row.book_item.isbn}</TableCell>  
+            </TableRow>
+          ))}
+          </TableBody> 
         </Table> 
         </TableContainer> 
       <div className={classes.seeMore}>

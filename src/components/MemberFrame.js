@@ -3,107 +3,28 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
  
 import Title from './Title';
-import Typography from '@material-ui/core/Typography'; 
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
-import Box from '@material-ui/core/Box';
-import Table from '@material-ui/core/Table'; 
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';  
-import IconButton from '@material-ui/core/IconButton';
+import {Paper,Grid,Typography,Container,Box} from '@material-ui/core';
+import {Table ,TableBody ,TableCell,TableContainer,TableHead,TableRow} from '@material-ui/core';  
+import {Link, IconButton,Snackbar,Fab} from '@material-ui/core'; 
+import {Menu ,MenuItem} from '@material-ui/core';     
 import MoreVert from '@material-ui/icons/MoreVert';   
-import AddIcon from '@material-ui/icons/Add';
-import Fab from '@material-ui/core/Fab';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import AddIcon from '@material-ui/icons/Add'; 
 import MemberUpdateDialog from './MemberUpdateDialog';
-import MemberInsertDialog from './MemberInsertDialog';
-import Snackbar from '@material-ui/core/Snackbar';
+import MemberInsertDialog from './MemberInsertDialog'; 
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" href="#">
         Your Website
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
   );
-}
-  
-const drawerWidth = 240;
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-      display: 'flex',
-    },
-    toolbar: {
-      paddingRight: 24, // keep right padding when drawer closed
-    },
-    toolbarIcon: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      padding: '0 8px',
-      ...theme.mixins.toolbar,
-    },
-    appBar: {
-      zIndex: theme.zIndex.drawer + 1,
-      transition: theme.transitions.create(['width', 'margin'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-    },
-    appBarShift: {
-      marginLeft: drawerWidth,
-      width: `calc(100% - ${drawerWidth}px)`,
-      transition: theme.transitions.create(['width', 'margin'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    },
-    menuButton: {
-      marginRight: 36,
-    },
-    menuButtonHidden: {
-      display: 'none',
-    },
-    title: {
-      flexGrow: 1,
-    },
-    drawerPaper: {
-      position: 'relative',
-      whiteSpace: 'nowrap',
-      width: drawerWidth,
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    },
-    drawerPaperClose: {
-      overflowX: 'hidden',
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      width: theme.spacing(7),
-      [theme.breakpoints.up('sm')]: {
-        width: theme.spacing(9),
-      },
-    },
-    appBarSpacer: theme.mixins.toolbar,
-    content: {
-      flexGrow: 1,
-      height: '100vh',
-      overflow: 'auto',
-    },
+} 
+const useStyles = makeStyles((theme) => ({ 
     container: {
       paddingTop: theme.spacing(4),
       paddingBottom: theme.spacing(4),
@@ -121,10 +42,10 @@ const useStyles = makeStyles((theme) => ({
       marginRight: theme.spacing(1),
     },
   }));
+
   async function deleteMember(id) {
     let url = process.env.REACT_APP_API_URL+'deleteMember?memberId=' + id; 
-    return fetch(url)  
-      .then(data => data.json()) 
+    return fetch(url).then(data => data.json()) 
    }
    async function insertMemberDetails(details){
     return fetch(process.env.REACT_APP_API_URL+'signup', {
@@ -213,16 +134,11 @@ export default function MemberFrame() {
     };
 
     const updateSubmit = async (memberId,memberDetails) => {  
-      const data = await updateMemberDetails({
-        memberId,
-        memberDetails
-      }); 
+      const data = await updateMemberDetails({memberId, memberDetails }); 
       updateMemberList(data)
     }  
     const insertSubmit = async (user_id,psswd,first_name,last_name,dob) => {  
-      const data = await insertMemberDetails({
-        user_id,psswd,first_name,last_name,dob
-      }); 
+      const data = await insertMemberDetails({ user_id,psswd,first_name,last_name,dob  }); 
       updateMemberList(data)
     }  
 
@@ -251,48 +167,47 @@ export default function MemberFrame() {
 
             
             <Paper className={fixedHeightPaper}>            
-                    <Title>All Library Members </Title> 
-                    
-                    <TableContainer className={classes.tablecontainer}>
-                    <Table  stickyHeader aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell> 
-                                  <Fab color="secondary" aria-label="add" onClick={(event ) => {handleAddMember(event) }}> 
-                                  <AddIcon />
-                                  </Fab>
-                                </TableCell> 
-                                <TableCell >User Id</TableCell>
-                                <TableCell>First name</TableCell> 
-                                <TableCell>Last Name</TableCell> 
-                                <TableCell >DOB</TableCell> 
-                                <TableCell >Role</TableCell> 
-                                <TableCell >Debt</TableCell> 
-                                <TableCell >DOJ</TableCell>  
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                        {memberList.map((row) => (
-                            
-                            <TableRow key={row.id}>
-                                <TableCell>
-                                    <IconButton onClick={(event ) => {handleMoreClick(event, row) }}> 
-                                        <MoreVert/>
-                                    </IconButton>
-                                    <MemberMenu/>
-                                </TableCell> 
-                                <TableCell>  {row.user_id}  </TableCell>
-                                <TableCell>{row.first_name}</TableCell> 
-                                <TableCell>{row.last_name}</TableCell> 
-                                <TableCell>{row.dob}</TableCell> 
-                                <TableCell>{row.role}</TableCell> 
-                                <TableCell>{row.debt}</TableCell> 
-                                <TableCell>{row.join_date}</TableCell>  
-                            </TableRow>
-                        ))}
-                        </TableBody> 
-                    </Table> 
-                    </TableContainer> 
+              <Title>All Library Members </Title> 
+              
+              <TableContainer className={classes.tablecontainer}>
+              <Table  stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                      <TableCell> 
+                        <Fab color="secondary" aria-label="add" onClick={(event ) => {handleAddMember(event) }}> 
+                        <AddIcon />
+                        </Fab>
+                      </TableCell> 
+                      <TableCell >User Id</TableCell>
+                      <TableCell>First name</TableCell> 
+                      <TableCell>Last Name</TableCell> 
+                      <TableCell >DOB</TableCell> 
+                      <TableCell >Role</TableCell> 
+                      <TableCell >Debt</TableCell> 
+                      <TableCell >DOJ</TableCell>  
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                  {memberList.map((row) => (                            
+                    <TableRow key={row.id}>
+                      <TableCell>
+                          <IconButton onClick={(event ) => {handleMoreClick(event, row) }}> 
+                              <MoreVert/>
+                          </IconButton>
+                          <MemberMenu/>
+                      </TableCell> 
+                      <TableCell>  {row.user_id}  </TableCell>
+                      <TableCell>{row.first_name}</TableCell> 
+                      <TableCell>{row.last_name}</TableCell> 
+                      <TableCell>{row.dob}</TableCell> 
+                      <TableCell>{row.role}</TableCell> 
+                      <TableCell>{row.debt}</TableCell> 
+                      <TableCell>{row.join_date}</TableCell>  
+                    </TableRow>
+                  ))}
+                  </TableBody> 
+              </Table> 
+              </TableContainer> 
             </Paper>
             </Grid>
             </Grid>
