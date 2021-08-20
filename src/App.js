@@ -15,7 +15,7 @@ function App() {
     <div className="wrapper"> 
       <Router>        
         <Route exact path="/" component={Dashboard} > 
-        <Dashboard user_token={token}/> </Route>
+        <Dashboard user_token={token} /> </Route>
       </Router>
     </div>
   );
