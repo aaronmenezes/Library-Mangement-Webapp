@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
     },
     fixedHeight: {
-      height: 450,
+      height: 600,
     }, 
     extendedIcon: {
       marginRight: theme.spacing(1),
@@ -168,15 +168,16 @@ export default function MemberFrame() {
   React.useEffect(() => {
     fetch(process.env.REACT_APP_API_URL+'getMemberList')
     .then(results => results.json())
-    .then(data => {  
-        memberList.splice(0,memberList.length)
-        let memberRows=[]
-        data["memberlist"].forEach((item) => {   
-          memberRows.push(createMemberData(item.id,item.user_id,item.join_date,item.first_name,item.last_name,item.dob,item.role,item.debt));
-        }); 
-      setMemberList(memberRows) 
-    });
-    }, []);
+    .then(data => {  updateMemberList(data) })}, []);
+
+    const updateMemberList =(data)=>{
+      memberList.splice(0,memberList.length)
+      let memberRows=[]
+      data["memberlist"].forEach((item) => {   
+        memberRows.push(createMemberData(item.id,item.user_id,item.join_date,item.first_name,item.last_name,item.dob,item.role,item.debt));
+      }); 
+       setMemberList(memberRows) 
+    }
 
     const updatemember = (row) => {  
       setSelectedInfoValue(row)
@@ -216,24 +217,18 @@ export default function MemberFrame() {
         memberId,
         memberDetails
       }); 
-        if(data["status"] == "success"){   
-        // update lists
-        } 
+      updateMemberList(data)
     }  
     const insertSubmit = async (user_id,psswd,first_name,last_name,dob) => {  
       const data = await insertMemberDetails({
         user_id,psswd,first_name,last_name,dob
       }); 
-        if(data["status"] == "success"){   
-        // update lists
-        } 
+      updateMemberList(data)
     }  
 
     const deleteSubmit = async (id) => {  
       const data = await deleteMember( id ); 
-       if(data["status"] == "success"){   
-        setDeleteopen(true)
-       } 
+       updateMemberList(data)
     }
 
     function MemberMenu(){
