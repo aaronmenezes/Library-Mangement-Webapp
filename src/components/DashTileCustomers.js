@@ -28,7 +28,7 @@ export default function DashTileCustomers(props) {
     .then(data => { 
       let tmpdata = []
       chartdata.splice(0,chartdata.length) 
-        data["rank_list"].forEach((item) => {   
+        data["rank_list"].slice(0).reverse().map((item) => {   
           tmpdata.push({ name:item.member_item.first_name+" "+item.member_item.last_name, amount : item.item_count });  
          });
          setChartData(tmpdata)

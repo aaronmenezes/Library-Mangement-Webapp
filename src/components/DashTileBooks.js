@@ -24,7 +24,7 @@ export default function DashTileBooks(props) {
     .then(data => { 
       let tmpdata = []
       chartdata.splice(0,chartdata.length) 
-        data["rank_list"].forEach((item) => {   
+        data["rank_list"].slice(0).reverse().map((item) => {   
           tmpdata.push({ name:item.book_item.title, issued : item.item_count,
             inventory_count : item.inventory_count,
             checkout_count : item.checkout_count  });  

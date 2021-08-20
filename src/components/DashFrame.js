@@ -116,13 +116,13 @@ export default function DashFrame(props) {
     <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
+            <Grid item xs={12} md={8} lg={8}>
               <Paper className={fixedHeightPaper}>
                 <DashTileBooks categorySwitch ={categorySwitch}/>
               </Paper>
             </Grid>
             {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
+            <Grid item xs={12} md={4} lg={4}>
               <Paper className={fixedHeightPaper} >
                 <DashTileCustomers categorySwitch ={categorySwitch}/>
               </Paper>

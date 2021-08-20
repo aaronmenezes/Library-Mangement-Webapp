@@ -135,15 +135,15 @@ export default function ReportFrame() {
     setReportType(event.target.value)    
   };
  
-  const custDataReady=(data)=>{ 
-    console.log(data)
+  const custDataReady=(data)=>{  
     setCustReportData(data["rank_list"])
   };
-  const bookDataReady=(data)=>{ 
-    console.log(data)
+  const bookDataReady=(data)=>{  
     setBookReportData(data["rank_list"])
   };
+  const handleDownload=()=>{
 
+  }
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) { 
       return (
@@ -174,33 +174,31 @@ export default function ReportFrame() {
                         label="Age"
                       >
                         <MenuItem value=""> <em>None</em> </MenuItem>
-                        <MenuItem value={"book"}>Most Popular Books</MenuItem>
-                        <MenuItem value={"member"}>Member Spending Trends</MenuItem> 
+                        <MenuItem value={"book"}>Top Issued Books </MenuItem>
+                        <MenuItem value={"member"}>Highest Paying Customers</MenuItem> 
                       </Select>
                     </FormControl>
-                    <Button variant="contained" 
-                      color="primary"
-                        style={{width:"20%",marginTop:"20px"}} >
-                      Fetch Report  
+                    <Button variant="contained" color="primary" style={{width:"20%",marginTop:"20px"}} onClick={handleDownload}>
+                      Download Report  
                     </Button>
 
                 </Paper>
             </Grid>
-            <Grid item xs={12} md={4} lg={3}>            
+            <Grid item xs={12} md={4} lg={4}>            
                 <Paper className={fixedHeight}>   
                      {reportType=="book"?<DashTileBooks hideLink={true} bookDataReady={bookDataReady}/>:
                      reportType=="member"?<DashTileCustomers hideLink={true} custDataReady={custDataReady}/>:<p></p>} 
                   </Paper>
             </Grid>
-            <Grid item xs={12} md={4} lg={9}>            
+            <Grid item xs={12} md={4} lg={8}>            
                 <Paper className={fixedHeight}>   
                   <TableContainer className={classes.tablecontainer} >
                     <Table  stickyHeader aria-label="sticky table">
                         <TableHead>
                              {reportType=="member"?<TableRow> 
                                 <TableCell> Amount Spend </TableCell>
-                                <TableCell> Title </TableCell>
-                                <TableCell> Authors </TableCell> 
+                                <TableCell> First Name </TableCell>
+                                <TableCell> last name </TableCell> 
                                 <TableCell> Type </TableCell>  
                             </TableRow>:reportType=="book"?<TableRow> 
                                 <TableCell>Title</TableCell>
