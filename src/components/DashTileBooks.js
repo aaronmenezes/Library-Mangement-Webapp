@@ -33,8 +33,7 @@ export default function DashTileBooks() {
 
   
 const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    console.log(payload)
+  if (active && payload && payload.length) { 
     return (
       <div className="custom-tooltip" style={{ background:"rgba(238, 245, 246, 0.79)",padding:"10"}}> 
         <p className="label">{`${label} `}</p>

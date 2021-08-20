@@ -6,83 +6,177 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TableContainer from '@material-ui/core/TableContainer'; 
+import IconButton from '@material-ui/core/IconButton';
+import MoreVert from '@material-ui/icons/MoreVert';  
 import Title from './Title';
-
-// Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-  return { id, date, name, shipTo, paymentMethod, amount };
-}
-
-const rows = [
-  createData(0, '16 Mar, 2019', 'Elvis Presley Elvis Presley Elvis Presley Elvis Presley Elvis Presley Elvis Presley Elvis Presley Elvis Presley Elvis Presley ', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-  createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-  createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
-  createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-  createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-  createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
-  createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-  createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-  createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
-  createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-  createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-  createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
-  createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-  createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-  createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
-];
+import clsx from 'clsx';  
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';  
+import InfoDialog from './InfoDialog';
 
 function preventDefault(event) {
   event.preventDefault();
 }
 
 const useStyles = makeStyles((theme) => ({
-  seeMore: {
-    marginTop: theme.spacing(3),
-  },
-}));
+    root: {
+      display: 'flex',
+    },
+     
+    content: {
+      flexGrow: 1,
+      height: '100vh',
+      overflow: 'auto',
+    },
+    container: {
+      paddingTop: theme.spacing(4),
+      paddingBottom: theme.spacing(4),
+    },
+    tablecontainer:{
+        maxHeight: 500,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      display: 'flex',
+      overflow: 'auto',
+      flexDirection: 'column',
+    },
+    fixedHeight: {
+      height: 450,
+    },
+    
+  }));
+ 
+
+  function createBagData(book_item,bag_item,member_item) { 
+    return {book_item,bag_item,member_item};
+  }
+   
+  async function checkin(checkindetils) {
+    return fetch(process.env.REACT_APP_API_URL+'checkin', {
+      method: 'POST',
+      headers: {
+        'mode':'no-cors',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(checkindetils)
+    })
+      .then(data => data.json()) 
+  }
 
 export default function Orders() {
   const classes = useStyles();
+  const [bookBagList, setBookBagList] = React.useState([]);
+  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight); 
+  const [selectedMenuRow, setSelectedMenuRow] = React.useState();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorE2, setAnchorE2] = React.useState(null);
+  const [infoDialogOpen, setInfoDialogOpen] = React.useState(false);
+  const [selectedInfoValue, setSelectedInfoValue] = React.useState(null); 
+  React.useEffect(() => { getUpdatedCheckBooks ()}, []);
+
+    const handleClose = () => {
+      setAnchorEl(null); 
+      setAnchorE2(null); 
+      setInfoDialogOpen(false);
+    };
+  const getUpdatedCheckBooks = ()=>{
+    fetch(process.env.REACT_APP_API_URL+'getCheckedBooks')
+    .then(results => results.json())
+    .then(data => { 
+      bookBagList.splice(0,bookBagList.length)
+      let bagrows=[]
+      data["booklist"].forEach((item) => {   
+        if(item.bag_item.status)
+          bagrows.push(createBagData(  item.book_item,item.bag_item,item.member_item)); 
+       });
+       setBookBagList(bagrows)
+    });    
+  }
+
+  const handleMoreClick = (event,row) => {
+    setSelectedMenuRow(row) 
+    setAnchorEl(event.currentTarget);
+  };
+
+  const showBookInfo = (row) => { 
+    setSelectedInfoValue(row)
+    setInfoDialogOpen(true)
+    setAnchorE2(null);
+  };
+
+  const returnbook = (row) => {   
+    checkinSubmit(row["member_item"]["id"],row["book_item"]["bookID"],row["bag_item"]["bagId"])       
+    setAnchorEl(null);
+  };
+  const checkinSubmit = async (userId,bookId,bagId) => {  
+    const data = await checkin({
+      userId,
+      bookId,
+      bagId
+    }); 
+     if(data["status"] == "success"){   
+      getUpdatedCheckBooks()
+     } 
+  }
+  function CheckoutMenu(){
+    return (<Menu
+         id="issuebook-menu"
+         anchorEl={anchorEl}
+         keepMounted
+         open={Boolean(anchorEl)}
+         onClose={handleClose}
+       >
+       <MenuItem onClick={()=>{returnbook(selectedMenuRow)}}>Return Book</MenuItem>
+       <MenuItem onClick={()=> {showBookInfo(selectedMenuRow)}}>See All Info</MenuItem> 
+     </Menu>);
+   }
   return (
-    <React.Fragment>
-      <Title>Recent Orders</Title>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.shipTo}</TableCell>
-              <TableCell>{row.paymentMethod}</TableCell>
-              <TableCell align="right">{row.amount}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <React.Fragment>  
+    <Title>Issued Books </Title>            
+      <TableContainer className={classes.tablecontainer}>
+        <Table  stickyHeader aria-label="sticky table">
+          <TableHead>
+                <TableRow>
+                    <TableCell width="5%">  </TableCell> 
+                    <TableCell width="30%"> Title </TableCell>
+                    <TableCell width="20%"> Authors </TableCell> 
+                    <TableCell width="20%"> Member</TableCell> 
+                    <TableCell width="10%"> Status </TableCell> 
+                    <TableCell width="30%"> Issue Date </TableCell> 
+                    <TableCell width="40%"> ReturnDate </TableCell> 
+                    <TableCell width="15%"> ISBN</TableCell>  
+                </TableRow>
+            </TableHead>
+            <TableBody>
+            {bookBagList.map((row) => (
+                
+                <TableRow key={row.bag_item.bagId}>
+                    <TableCell  width="5%">
+                        <IconButton aria-controls="simple-menu" aria-haspopup="true"onClick={(event ) => {handleMoreClick(event, row) }} > 
+                            <MoreVert/>
+                        </IconButton>
+                        <CheckoutMenu></CheckoutMenu>
+                    </TableCell> 
+                    <TableCell width="30%">{row.book_item.title}</TableCell>
+                    <TableCell width="20%">{row.book_item.authors}</TableCell> 
+                    <TableCell width="20%">{row.member_item.first_name + " " +row.member_item.last_name}</TableCell> 
+                    <TableCell width="10%">{row.bag_item.status==1?"Issued":"Returned"}</TableCell> 
+                    <TableCell width="30%">{row.bag_item.checkout_date}</TableCell> 
+                    <TableCell width="40%">{row.bag_item.checkin_date?row.bag_item.checkin_date:"-"}</TableCell> 
+                    <TableCell width="10%">{row.book_item.isbn}</TableCell>  
+                </TableRow>
+            ))}
+            </TableBody> 
+        </Table> 
+        </TableContainer> 
       <div className={classes.seeMore}>
         <Link color="primary" href="#" onClick={preventDefault}>
-          See more orders
+          See All Book Details
         </Link>
       </div>
+      <InfoDialog selectedValue={selectedInfoValue} open={infoDialogOpen} onClose={handleClose} />  
     </React.Fragment>
   );
 }
