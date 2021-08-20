@@ -16,7 +16,7 @@ const useStyles = makeStyles({
 });
 
 export default function DashTileCustomers(props) {
-  const { categorySwitch,hideLink } = props;
+  const { categorySwitch,hideLink,custDataReady } = props;
   const classes = useStyles();
   const [chartdata, setChartData] = React.useState([]);
 
@@ -32,6 +32,8 @@ export default function DashTileCustomers(props) {
           tmpdata.push({ name:item.member_item.first_name+" "+item.member_item.last_name, amount : item.item_count });  
          });
          setChartData(tmpdata)
+         if(custDataReady)
+         custDataReady(data)
     });    
   } 
   return (
@@ -64,4 +66,5 @@ export default function DashTileCustomers(props) {
 DashTileCustomers.propTypes = {
   categorySwitch: PropTypes.func.isRequired ,
   hideLink :PropTypes.bool,
+  custDataReady:PropTypes.func,
 };

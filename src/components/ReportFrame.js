@@ -15,7 +15,13 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import DashTileBooks from './DashTileBooks';
-import DashTileCustomers from './DashTileCustomers';
+import DashTileCustomers from './DashTileCustomers'; 
+import Table from '@material-ui/core/Table'; 
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';  
 
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
@@ -120,6 +126,8 @@ export default function ReportFrame() {
   const classes = useStyles();
   const [reportIndex, setReportIndex] = React.useState('');
   const [reportType, setReportType] = React.useState([]); 
+  const [custReportData, setCustReportData] = React.useState([]); 
+  const [bookReportData, setBookReportData] = React.useState([]);  
   const searchFixedHeight = clsx(classes.paper, classes.searchFixedHeight); 
   const fixedHeight = clsx(classes.paper, classes.fixedHeight); 
   const handleChange = (event) => {
@@ -127,6 +135,14 @@ export default function ReportFrame() {
     setReportType(event.target.value)    
   };
  
+  const custDataReady=(data)=>{ 
+    console.log(data)
+    setCustReportData(data["rank_list"])
+  };
+  const bookDataReady=(data)=>{ 
+    console.log(data)
+    setBookReportData(data["rank_list"])
+  };
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) { 
@@ -170,12 +186,52 @@ export default function ReportFrame() {
 
                 </Paper>
             </Grid>
-            <Grid item xs={12} md={4} lg={12}>            
-                <Paper className={fixedHeight}>                   
-                  <Grid item xs={12} md={4} lg={6}>    
-                     {reportType=="book"?<DashTileBooks hideLink={true}/>:
-                     reportType=="member"?<DashTileCustomers hideLink={true}/>:<p></p>}
-                  </Grid> 
+            <Grid item xs={12} md={4} lg={3}>            
+                <Paper className={fixedHeight}>   
+                     {reportType=="book"?<DashTileBooks hideLink={true} bookDataReady={bookDataReady}/>:
+                     reportType=="member"?<DashTileCustomers hideLink={true} custDataReady={custDataReady}/>:<p></p>} 
+                  </Paper>
+            </Grid>
+            <Grid item xs={12} md={4} lg={9}>            
+                <Paper className={fixedHeight}>   
+                  <TableContainer className={classes.tablecontainer} >
+                    <Table  stickyHeader aria-label="sticky table">
+                        <TableHead>
+                             {reportType=="member"?<TableRow> 
+                                <TableCell> Amount Spend </TableCell>
+                                <TableCell> Title </TableCell>
+                                <TableCell> Authors </TableCell> 
+                                <TableCell> Type </TableCell>  
+                            </TableRow>:reportType=="book"?<TableRow> 
+                                <TableCell>Title</TableCell>
+                                <TableCell> Author </TableCell>
+                                <TableCell> Publish </TableCell> 
+                                <TableCell> Issue Count </TableCell> 
+                                <TableCell> Available </TableCell>  
+                                <TableCell> Total </TableCell>  
+                            </TableRow>:<div></div>}
+                        </TableHead>
+                        <TableBody>
+                        {reportType=="member"?custReportData.slice(0).reverse().map((row) => (                            
+                            <TableRow key={row.member_item.id}>
+                                <TableCell>{row.item_count}</TableCell> 
+                                <TableCell>{row.member_item.first_name}</TableCell>
+                                <TableCell>{row.member_item.last_name}</TableCell> 
+                                <TableCell>{row.member_item.role}</TableCell>  
+                            </TableRow>
+                        )):reportType=="book"?bookReportData.slice(0).reverse().map((row) => (                            
+                          <TableRow key={row.book_item.bookID}>
+                              <TableCell>{row.book_item.title}</TableCell> 
+                              <TableCell>{row.book_item.authors}</TableCell>
+                              <TableCell>{row.book_item.publisher}</TableCell> 
+                              <TableCell>{row.item_count}</TableCell>  
+                              <TableCell>{row.inventory_count- row.checkout_count}</TableCell>                                
+                              <TableCell>{row.inventory_count}</TableCell>  
+                          </TableRow>
+                      )):<div></div>}
+                        </TableBody> 
+                    </Table> 
+                    </TableContainer> 
                 </Paper>
              </Grid>
           </Grid>

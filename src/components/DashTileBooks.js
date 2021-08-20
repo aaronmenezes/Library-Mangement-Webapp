@@ -12,7 +12,7 @@ function preventDefault(event) {
 
 
 export default function DashTileBooks(props) {
-  const { categorySwitch ,hideLink} = props;
+  const { categorySwitch ,hideLink,bookDataReady} = props;
   const theme = useTheme();
   const [chartdata, setChartData] = React.useState([]);
 
@@ -30,6 +30,8 @@ export default function DashTileBooks(props) {
             checkout_count : item.checkout_count  });  
          });
          setChartData(tmpdata)
+         if(bookDataReady)
+          bookDataReady(data)
     });    
   } 
 
@@ -45,10 +47,8 @@ const CustomTooltip = ({ active, payload, label }) => {
       </div>
     );
   }
-
   return null;
 };
-
 
   return (
     <React.Fragment>
@@ -80,4 +80,5 @@ const CustomTooltip = ({ active, payload, label }) => {
 DashTileBooks.propTypes = {
   categorySwitch: PropTypes.func.isRequired,
   hideLink :PropTypes.bool,
+  bookDataReady:PropTypes.func,
 };
