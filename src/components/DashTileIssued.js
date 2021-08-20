@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'; 
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -65,7 +66,8 @@ const useStyles = makeStyles((theme) => ({
       .then(data => data.json()) 
   }
 
-export default function Orders() {
+export default function DashTileIssued(props) {
+  const { categorySwitch } = props;
   const classes = useStyles();
   const [bookBagList, setBookBagList] = React.useState([]);
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight); 
@@ -154,7 +156,7 @@ export default function Orders() {
                 
                 <TableRow key={row.bag_item.bagId}>
                     <TableCell  width="5%">
-                        <IconButton aria-controls="simple-menu" aria-haspopup="true"onClick={(event ) => {handleMoreClick(event, row) }} > 
+                        <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={(event ) => {handleMoreClick(event, row) }} > 
                             <MoreVert/>
                         </IconButton>
                         <CheckoutMenu></CheckoutMenu>
@@ -172,7 +174,7 @@ export default function Orders() {
         </Table> 
         </TableContainer> 
       <div className={classes.seeMore}>
-        <Link color="primary" href="#" onClick={preventDefault}>
+        <Link color="primary" href="#" onClick={(event ) => {preventDefault(event); categorySwitch("books")}} >
           See All Book Details
         </Link>
       </div>
@@ -180,3 +182,6 @@ export default function Orders() {
     </React.Fragment>
   );
 }
+DashTileIssued.propTypes = {
+  categorySwitch: PropTypes.func.isRequired 
+};

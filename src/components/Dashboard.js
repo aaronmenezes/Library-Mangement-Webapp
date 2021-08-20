@@ -19,6 +19,7 @@ import DashFrame from './DashFrame';
 import BookFrame from './BookFrame';
 import MemberFrame from './MemberFrame';
 import ImportBookFrame from './ImportBookFrame';
+import ReportFrame from './ReportFrame';
 
 function Copyright() {
   return (
@@ -136,7 +137,7 @@ export default function Dashboard() {
       setcategory(event.target.parentNode.parentNode.getAttribute("name").toLowerCase())  
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
+  const categorySwitch=(type)=>{setcategory(type)}
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -182,7 +183,11 @@ export default function Dashboard() {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        {category =="books"?<BookFrame/>:category =="members"?<MemberFrame/>:category =="reports"?<MemberFrame/>:category =="importbooks"?<ImportBookFrame/>:<DashFrame/>}
+        {category =="books"?<BookFrame/>:
+         category =="members"?<MemberFrame/>:
+          category =="reports"?<ReportFrame/>: 
+           category =="importbooks"?<ImportBookFrame/>:
+            <DashFrame categorySwitch = {categorySwitch}/>}
       </main>
     </div>
   );

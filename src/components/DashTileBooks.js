@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';  
 import { useTheme } from '@material-ui/core/styles'; 
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Title from './Title';
@@ -10,7 +11,8 @@ function preventDefault(event) {
 }
 
 
-export default function DashTileBooks() {
+export default function DashTileBooks(props) {
+  const { categorySwitch ,hideLink} = props;
   const theme = useTheme();
   const [chartdata, setChartData] = React.useState([]);
 
@@ -51,9 +53,8 @@ const CustomTooltip = ({ active, payload, label }) => {
   return (
     <React.Fragment>
       <Title>Top Issued Books</Title>
-      <ResponsiveContainer> 
-      <BarChart 
-          height={200}
+      <ResponsiveContainer width="100%" height="100%"> 
+      <BarChart  
           data={chartdata}
           margin={{
             top: 5,
@@ -67,11 +68,16 @@ const CustomTooltip = ({ active, payload, label }) => {
           <Bar dataKey="issued" label fill="#8884d8"  /> 
         </BarChart>
       </ResponsiveContainer> 
-      <div>
-        <Link color="primary" href="#" onClick={preventDefault}>
+      <div hidden={hideLink}>
+        <Link color="primary" href="#" onClick={(event ) => {preventDefault(event); categorySwitch("reports")}}>
           View All Reports
         </Link>
       </div>    
     </React.Fragment>
   );
 }
+
+DashTileBooks.propTypes = {
+  categorySwitch: PropTypes.func.isRequired,
+  hideLink :PropTypes.bool,
+};

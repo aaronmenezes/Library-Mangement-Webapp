@@ -1,12 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
+import PropTypes from 'prop-types';  
 import { makeStyles } from '@material-ui/core/styles';
-
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
+import Typography from '@material-ui/core/Typography'; 
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -14,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
 import DashTileBooks from './DashTileBooks';
 import DashTileCustomers from './DashTileCustomers';
-import Orders from './Orders'; 
+import DashTileIssued from './DashTileIssued'; 
 
 function Copyright() {
     return (
@@ -110,8 +106,8 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-export default function DashFrame() {
-
+export default function DashFrame(props) {
+    const { categorySwitch } = props;
     const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
@@ -122,19 +118,19 @@ export default function DashFrame() {
             {/* Chart */}
             <Grid item xs={12} md={8} lg={9}>
               <Paper className={fixedHeightPaper}>
-                <DashTileBooks />
+                <DashTileBooks categorySwitch ={categorySwitch}/>
               </Paper>
             </Grid>
             {/* Recent Deposits */}
             <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <DashTileCustomers />
+              <Paper className={fixedHeightPaper} >
+                <DashTileCustomers categorySwitch ={categorySwitch}/>
               </Paper>
             </Grid>
             {/* Recent Orders */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <Orders />
+                <DashTileIssued  categorySwitch ={categorySwitch}/>
               </Paper>
             </Grid>
           </Grid>
@@ -144,3 +140,7 @@ export default function DashFrame() {
      </Container>
     )
 }
+
+DashFrame.propTypes = {
+  categorySwitch: PropTypes.func.isRequired 
+};

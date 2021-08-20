@@ -1,7 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';  
 import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles'; 
 import Title from './Title';
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
@@ -16,6 +16,7 @@ const useStyles = makeStyles({
 });
 
 export default function DashTileCustomers(props) {
+  const { categorySwitch,hideLink } = props;
   const classes = useStyles();
   const [chartdata, setChartData] = React.useState([]);
 
@@ -37,8 +38,7 @@ export default function DashTileCustomers(props) {
     <React.Fragment>
       <Title>Highest Paying Customers</Title>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart 
-            height={200}
+        <BarChart  
             data={chartdata}
             margin={{
               top: 5,
@@ -52,11 +52,16 @@ export default function DashTileCustomers(props) {
             <Bar dataKey="amount" label fill="#8884d8"  /> 
           </BarChart>
       </ResponsiveContainer>
-      <div>
-        <Link color="primary" href="#" onClick={preventDefault}>
+      <div hidden={hideLink}> 
+        <Link color="primary" href="#"  onClick={(event ) => {preventDefault(event); categorySwitch("members")}}>
           See All Member Info
         </Link>
       </div>
     </React.Fragment>
   );
 }
+
+DashTileCustomers.propTypes = {
+  categorySwitch: PropTypes.func.isRequired ,
+  hideLink :PropTypes.bool,
+};
