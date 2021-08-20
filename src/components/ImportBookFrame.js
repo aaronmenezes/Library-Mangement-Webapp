@@ -182,8 +182,8 @@ export default function ImportBookFrame() {
     };
     const importDialogData = async (book_data)=>{  
         const data = await importBookToSystem({"import_book":book_data})
-        bookImportList.splice(0,bookImportList.length) 
-        setBookImportList(data)
+        if(data["status"]=="success")
+        importlist()
     };
     const showInfoDialog = (event, row)=>{
         setSelectedInfoValue(row)

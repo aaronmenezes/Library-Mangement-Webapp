@@ -12,8 +12,8 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
-import Chart from './Chart';
-import Deposits from './Deposits';
+import DashTileBooks from './DashTileBooks';
+import DashTileCustomers from './DashTileCustomers';
 import Orders from './Orders'; 
 
 function Copyright() {
@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
     },
     fixedHeight: {
-      height: 240,
+      height: 350,
     },
   }));
 
@@ -114,19 +114,21 @@ export default function DashFrame() {
 
     const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+
     return(
     <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             {/* Chart */}
             <Grid item xs={12} md={8} lg={9}>
               <Paper className={fixedHeightPaper}>
-                <Chart />
+                <DashTileBooks />
               </Paper>
             </Grid>
             {/* Recent Deposits */}
             <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>
-                <Deposits />
+                <DashTileCustomers />
               </Paper>
             </Grid>
             {/* Recent Orders */}
