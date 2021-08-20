@@ -10,11 +10,12 @@ function App() {
 
   if(!token) {
     return <Signin setToken={setToken} />
-  }
+  } 
   return (  
     <div className="wrapper"> 
       <Router>        
-        <Route exact path="/" component={Dashboard}/>  
+        <Route exact path="/" component={Dashboard} > 
+        <Dashboard user_token={token}/> </Route>
       </Router>
     </div>
   );

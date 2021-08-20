@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -20,6 +21,7 @@ import BookFrame from './BookFrame';
 import MemberFrame from './MemberFrame';
 import ImportBookFrame from './ImportBookFrame';
 import ReportFrame from './ReportFrame';
+import GuestViewFrame from './GuestViewFrame';
 
 function Copyright() {
   return (
@@ -116,12 +118,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Dashboard() {
+export default function Dashboard(props) {
+  const { user_token } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [category, setcategory] = React.useState("dashboard");
-  const handleDrawerOpen = () => {
-    setOpen(true);
+  const handleDrawerOpen = () => { 
+    if(user_token["user_details"]["role"]=="admin")
+      setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
@@ -168,6 +172,7 @@ export default function Dashboard() {
           paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
         }}
         open={open}
+        hidden={user_token["user_details"]["role"]!="admin"}
       >
         <div className={classes.toolbarIcon}>
           <IconButton onClick={handleDrawerClose}>
@@ -179,11 +184,11 @@ export default function Dashboard() {
           {mainListItems}
         </List>
         <Divider />
-        <List>{secondaryListItems}</List>
+        {/* <List>{secondaryListItems}</List> */}
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        {category =="books"?<BookFrame/>:
+        {(user_token["user_details"]["role"]!="admin")?<GuestViewFrame/>:category =="books"?<BookFrame/>:
          category =="members"?<MemberFrame/>:
           category =="reports"?<ReportFrame/>: 
            category =="importbooks"?<ImportBookFrame/>:
@@ -192,3 +197,6 @@ export default function Dashboard() {
     </div>
   );
 }
+Dashboard.propTypes = {
+  user_token: PropTypes.object.isRequired
+  }
