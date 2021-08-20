@@ -125,7 +125,7 @@ const useStyles = makeStyles((theme) => ({
 export default function ReportFrame() {
   const classes = useStyles();
   const [reportIndex, setReportIndex] = React.useState('');
-  const [reportType, setReportType] = React.useState([]); 
+  const [reportType, setReportType] = React.useState(''); 
   const [custReportData, setCustReportData] = React.useState([]); 
   const [bookReportData, setBookReportData] = React.useState([]);  
   const searchFixedHeight = clsx(classes.paper, classes.searchFixedHeight); 
@@ -141,8 +141,34 @@ export default function ReportFrame() {
   const bookDataReady=(data)=>{  
     setBookReportData(data["rank_list"])
   };
-  const handleDownload=()=>{
+  const handleDownload=()=>{ 
+      let csvContent = "data:text/csv;charset=utf-8,"  
+      if(reportType=="member"){
+      csvContent +="Amount Spend,First Name,Last name,Type\n" 
+      custReportData.map(row => {
+        csvContent += row.item_count +","
+        csvContent += row.member_item.first_name +","
+        csvContent += row.member_item.last_name +","
+        csvContent += row.member_item.role +"\n"
+      })
+    }else {
+      csvContent +="Title,Author,Publish,Issue Count,Available,Total\n";
+      bookReportData.map(row => {
+        csvContent +=row.book_item.title+","
+        csvContent += row.book_item.authors+","
+        csvContent += row.book_item.publisher+","
+        csvContent += row.item_count+"," 
+        csvContent += row.inventory_count-row.checkout_count+"," 
+        csvContent += row.inventory_count+"\n"
+      })
+    }
+      var encodedUri = encodeURI(csvContent);
+      var link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", reportType=="member"?"HighestPayingCustomers.csv":"TopIssuedBooks.csv");
+      document.body.appendChild(link);  
 
+      link.click()
   }
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) { 
@@ -178,7 +204,7 @@ export default function ReportFrame() {
                         <MenuItem value={"member"}>Highest Paying Customers</MenuItem> 
                       </Select>
                     </FormControl>
-                    <Button variant="contained" color="primary" style={{width:"20%",marginTop:"20px"}} onClick={handleDownload}>
+                    <Button variant="contained" color="primary" style={{width:"20%",marginTop:"20px"}} disabled={reportType==""} onClick={handleDownload}>
                       Download Report  
                     </Button>
 
