@@ -112,12 +112,14 @@ return(
           </Button>
         </Paper>
       </Grid>
+      {reportIndex!=""?
       <Grid item xs={12} md={4} lg={4}>            
         <Paper className={fixedHeight}>   
           {reportType=="book"?<DashTileBooks hideLink={true} bookDataReady={bookDataReady}/>:
           reportType=="member"?<DashTileCustomers hideLink={true} custDataReady={custDataReady}/>:<p></p>} 
         </Paper>
-      </Grid>
+      </Grid>:<div></div>}
+      {reportIndex!=""?
       <Grid item xs={12} md={4} lg={8}>            
         <Paper className={fixedHeight}>   
           <TableContainer className={classes.tablecontainer} >
@@ -160,7 +162,7 @@ return(
             </Table> 
             </TableContainer> 
           </Paper>
-        </Grid>
+        </Grid>:<div></div>}
     </Grid>
     <Box pt={4}>
       <Copyright />
