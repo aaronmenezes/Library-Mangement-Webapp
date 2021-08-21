@@ -23,11 +23,14 @@ import ImportBookFrame from './ImportBookFrame';
 import ReportFrame from './ReportFrame';
 import GuestViewFrame from './GuestViewFrame';
 
+function preventDefault(event) {
+  event.preventDefault(); 
+}
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" href="#" preventDefault onClick={preventDefault}>
         Your Website
       </Link>{' '}
       {new Date().getFullYear()}

@@ -8,11 +8,14 @@ import DashTileBooks from './DashTileBooks';
 import DashTileCustomers from './DashTileCustomers';
 import DashTileIssued from './DashTileIssued'; 
 
+function preventDefault(event) {
+  event.preventDefault();
+}
 function Copyright() {
     return (
       <Typography variant="body2" color="textSecondary" align="center">
         {'Copyright © '}
-        <Link color="inherit" href="#">
+        <Link color="inherit" href="#" onClick={preventDefault}>
           Your Website
         </Link>{' '}
         {new Date().getFullYear()}

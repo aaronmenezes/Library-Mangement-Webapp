@@ -8,11 +8,15 @@ import {Select,FormControl,InputLabel,Button,MenuItem,Link} from '@material-ui/c
 import DashTileBooks from './DashTileBooks';
 import DashTileCustomers from './DashTileCustomers';   
 
+function preventDefault(event) {
+  event.preventDefault();
+}
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="#">
+      <Link color="inherit" href="#" onClick={preventDefault}>
         Your Website
       </Link>{' '}
       {new Date().getFullYear()}

@@ -3,20 +3,26 @@ import clsx from 'clsx';
 import Title from './Title';
 import { makeStyles } from '@material-ui/core/styles';  
 import {Paper,Grid,Typography,Container,Box} from '@material-ui/core';
-import {Table ,TableBody ,TableCell,TableContainer,TableHead,TableRow} from '@material-ui/core';  
-import {Link, IconButton,Snackbar} from '@material-ui/core'; 
-import {Menu ,MenuItem} from '@material-ui/core'; 
+import {Table,TableBody,TableCell,TableContainer,TableHead,TableRow} from '@material-ui/core';  
+import {Link,Button,IconButton,Snackbar,TextField} from '@material-ui/core'; 
+import {Menu,MenuItem} from '@material-ui/core'; 
+import {Accordion,AccordionSummary,AccordionDetails} from '@material-ui/core';
+
 import MoreVert from '@material-ui/icons/MoreVert'; 
 import InfoDialog from './InfoDialog';
 import BookUpdateDialog from'./BookUpdateDialog';
 import BookIssueDialog from'./BookIssueDialog';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 
+function preventDefault(event) {
+  event.preventDefault();
+}
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="#">
+      <Link color="inherit" href="#" onClick={preventDefault}>
         Your Website
       </Link>{' '}
       {new Date().getFullYear()}
@@ -84,6 +90,9 @@ const useStyles = makeStyles((theme) => ({
     fixedHeight: {
       height: 450,
     },
+    searchFixedHeight: {
+        height: 150,
+    }, 
      
   }));
 
@@ -101,9 +110,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BookFrame() {
     const classes = useStyles(); 
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight); 
+    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+    const searchFixedHeight = clsx(classes.paper, classes.searchFixedHeight); 
     const [bookBagList, setBookBagList] = React.useState([]);
     const [bookList, setBookList] = React.useState([]);
+    const [searchbookList, setSearchBookList] = React.useState([]);
     const [memberList, setMemberList] = React.useState([]);
     const [selectedMenuRow, setSelectedMenuRow] = React.useState();
     const [deleteopen, setDeleteopen] = React.useState();
@@ -113,6 +124,8 @@ export default function BookFrame() {
     const [updateDialogOpen, setUpdateDialogOpen] = React.useState(false);
     const [issueDialogOpen, setIssueDialogOpen] = React.useState(false);
     const [selectedInfoValue, setSelectedInfoValue] = React.useState(null); 
+    const [searchParams, setSearchParams] = React.useState({}); 
+    const [searchDisabled, setSearchDisabled] = React.useState(true); 
   
     const handleClose = () => {
       setAnchorEl(null);
@@ -236,12 +249,27 @@ export default function BookFrame() {
          setMemberList(memberRows) 
       }); 
     }
+
+    const searchBooks =()=>{
+      let srch_param = searchParams["title"]?searchParams["title"]:""
+      let auth_param = searchParams["authors"]?searchParams["authors"]:""
+      fetch(process.env.REACT_APP_API_URL+'quickBookSearch'+"?book_q="+srch_param+"&auth_q="+auth_param)
+      .then(results => results.json())
+      .then(data => {  
+          searchbookList.splice(0,searchbookList.length) 
+          let bookrows=[] 
+          data["booklist"].forEach((item) => { 
+            bookrows.push(createData(item.book_item,item.inventory_item)); 
+          });
+          setSearchBookList(bookrows) 
+      }); 
+    }
     React.useEffect(() => { getUpdatedCheckBooks ()}, []);
     
     React.useEffect(() => {getUpdatedInventory ()}, []);
    
     React.useEffect(() => {getUpdatedMemberList()}, []);
-
+    
     function CheckoutMenu(){
      return (<Menu
           id="issuebook-menu"
@@ -254,7 +282,15 @@ export default function BookFrame() {
         <MenuItem onClick={()=> {showBookInfo(selectedMenuRow)}}>See All Info</MenuItem> 
       </Menu>);
     }
+    const handleParamChange=(event)=>{
+      let id = (event.target.id).replace("-input","")      
+      if(event.target.value=="")
+        delete  searchParams[id]
+      else searchParams[id]=event.target.value 
+      setSearchDisabled(searchParams?(searchParams["title"]==undefined&&searchParams["authors"]==undefined):true)
+    }
 
+     
     function AllBooksMenu(){
       return (<Menu id="booklist-menu"  anchorEl={anchorE2}  keepMounted open={Boolean(anchorE2)} onClose={handleClose} >
          <MenuItem onClick={()=>{issuebook(selectedMenuRow)}}>Issue Book</MenuItem>
@@ -266,6 +302,78 @@ export default function BookFrame() {
     return(
      <Container maxWidth="lg" className={classes.container}>
         <Grid container spacing={3}> 
+        <Grid item xs={12} md={4} lg={12}>          
+          <Accordion> 
+            <AccordionSummary id="panel1a-header"  aria-controls="panel1a-content" expandIcon={<ExpandMoreIcon />}    >
+              <Title>Quick Search</Title>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Grid item container>
+                <Grid item xs={3}>
+                  <TextField  id="title-input"  label="Title" variant="outlined"  type="text" onChange={handleParamChange} />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField  id="authors-input"  label="Author"  variant="outlined" type="text" onChange={handleParamChange}/>                 
+                </Grid>
+                <Grid item xs={1}>
+                  <Button variant="contained" lg color="primary" style={{height:"100%"}} disabled={searchDisabled} onClick={searchBooks}>
+                  Search  
+                  </Button>  
+                  </Grid>
+                <Grid item xs={3}>
+                  <Button variant="contained" lg color="accent" style={{height:"100%"}} preventDefault onClick={()=>{setSearchBookList([])}}   >
+                  Clear Search  
+                  </Button>              
+                </Grid> 
+                <Grid item xs={2}> 
+                  <Typography >{searchbookList.length +"  Search results"}</Typography>  
+                </Grid>            
+              </Grid> 
+              
+            </AccordionDetails>            
+              <Grid item xs={12} md={4} lg={12}>
+              {searchbookList.length==0?null:
+                 <Paper className={fixedHeightPaper}>                      
+                    <TableContainer className={classes.tablecontainer}>
+                    <Table  stickyHeader aria-label="sticky table">
+                        <TableHead>
+                            <TableRow>
+                              <TableCell>  </TableCell> 
+                              <TableCell width="30%"> Title </TableCell>
+                              <TableCell> Authors </TableCell> 
+                              <TableCell> Publisher </TableCell> 
+                              <TableCell width="20%"> Publication date </TableCell> 
+                              <TableCell width="15%"> No. of books </TableCell> 
+                              <TableCell width="15%"> No. Issued books </TableCell> 
+                              <TableCell width="5%"> ISBN</TableCell>  
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                        {searchbookList.map((row) => (
+                            
+                            <TableRow key={row.book_item.isbn}>
+                              <TableCell>
+                                  <IconButton onClick={(event ) => {handleAllMoreClick(event, row) }}> 
+                                      <MoreVert/>
+                                  </IconButton>
+                                  <AllBooksMenu/>
+                              </TableCell> 
+                              <TableCell  >  {row.book_item.title}  </TableCell>
+                              <TableCell>{row.book_item.authors}</TableCell> 
+                              <TableCell>{row.book_item.publisher}</TableCell> 
+                              <TableCell>{row.book_item.publication_date}</TableCell> 
+                              <TableCell>{row.inventory_item.count}</TableCell> 
+                              <TableCell>{row.inventory_item.checkout_count}</TableCell> 
+                              <TableCell>{row.book_item.isbn}</TableCell>  
+                            </TableRow>
+                        ))}
+                        </TableBody> 
+                    </Table> 
+                    </TableContainer>
+                </Paper>}
+              </Grid>
+          </Accordion> 
+        </Grid>
             <Grid item xs={12} md={4} lg={12}>
             <Paper className={fixedHeightPaper}>            
               <Title>Checked Books </Title>            

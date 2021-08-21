@@ -5,11 +5,14 @@ import Title from './Title';
 import {Paper,Grid,Typography,Container,Box,Link} from '@material-ui/core'; 
 import {Table ,TableBody ,TableCell,TableContainer,TableHead,TableRow} from '@material-ui/core';   
 
+function preventDefault(event) {
+  event.preventDefault();
+}
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" href="#" onClick={preventDefault}>
         Your Website
       </Link>{' '}
       {new Date().getFullYear()}

@@ -10,11 +10,16 @@ import {AddCircle,Info} from '@material-ui/icons';
 import BookInfoDialog from './BookInfoDialog';
 import BookImportDialog from './BookImportDialog';
 
+
+function preventDefault(event) {
+  event.preventDefault();
+}
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="#">
+      <Link color="inherit" href="#" onClick={preventDefault}>
         Your Website
       </Link>{' '}
       {new Date().getFullYear()}
