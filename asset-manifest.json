@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "//Library-Mangement-Webapp/static/css/main.a617e044.chunk.css",
+    "main.js": "//Library-Mangement-Webapp/static/js/main.6d430107.chunk.js",
+    "main.js.map": "//Library-Mangement-Webapp/static/js/main.6d430107.chunk.js.map",
+    "runtime-main.js": "//Library-Mangement-Webapp/static/js/runtime-main.877a1d64.js",
+    "runtime-main.js.map": "//Library-Mangement-Webapp/static/js/runtime-main.877a1d64.js.map",
+    "static/js/2.ca40dc16.chunk.js": "//Library-Mangement-Webapp/static/js/2.ca40dc16.chunk.js",
+    "static/js/2.ca40dc16.chunk.js.map": "//Library-Mangement-Webapp/static/js/2.ca40dc16.chunk.js.map",
+    "static/js/3.8e878791.chunk.js": "//Library-Mangement-Webapp/static/js/3.8e878791.chunk.js",
+    "static/js/3.8e878791.chunk.js.map": "//Library-Mangement-Webapp/static/js/3.8e878791.chunk.js.map",
+    "index.html": "//Library-Mangement-Webapp/index.html",
+    "static/css/main.a617e044.chunk.css.map": "//Library-Mangement-Webapp/static/css/main.a617e044.chunk.css.map",
+    "static/js/2.ca40dc16.chunk.js.LICENSE.txt": "//Library-Mangement-Webapp/static/js/2.ca40dc16.chunk.js.LICENSE.txt",
+    "static/media/logo.6ce24c58.svg": "//Library-Mangement-Webapp/static/media/logo.6ce24c58.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.877a1d64.js",
+    "static/js/2.ca40dc16.chunk.js",
+    "static/css/main.a617e044.chunk.css",
+    "static/js/main.6d430107.chunk.js"
+  ]
+}
