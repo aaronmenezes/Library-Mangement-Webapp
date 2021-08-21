@@ -88,7 +88,7 @@ export default function SignIn({ setToken }) {
       psswd
     });
     console.log(token)
-    if(token["login"] == "success"){    
+    if(token["login"] == "success"){      
       setToken(token);
     }else setShowError(true)
   }

@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge'; 
+import ExitToApp from '@material-ui/icons/ExitToApp'
 import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -24,7 +25,8 @@ import ReportFrame from './ReportFrame';
 import GuestViewFrame from './GuestViewFrame';
 
 function preventDefault(event) {
-  event.preventDefault(); 
+  event.preventDefault();
+  return false
 }
 function Copyright() {
   return (
@@ -122,7 +124,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard(props) {
-  const { user_token } = props;
+  const { user_token,logout } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [category, setcategory] = React.useState("dashboard");
@@ -162,10 +164,8 @@ export default function Dashboard(props) {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             Library
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
+          <IconButton color="inherit"> 
+              <ExitToApp onClick={logout} /> 
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -201,5 +201,6 @@ export default function Dashboard(props) {
   );
 }
 Dashboard.propTypes = {
-  user_token: PropTypes.object.isRequired
-  }
+  user_token: PropTypes.object.isRequired,
+  logout: PropTypes.func.isRequired
+}

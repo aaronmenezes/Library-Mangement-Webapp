@@ -28,7 +28,8 @@ export default function DashTileBooks(props) {
             inventory_count : item.inventory_count,
             checkout_count : item.checkout_count  });  
          });
-         setChartData(tmpdata)
+         
+         setChartData(tmpdata.slice(0,10))
          if(bookDataReady)
           bookDataReady(data)
     });    
@@ -38,7 +39,7 @@ export default function DashTileBooks(props) {
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) { 
     return (
-      <div className="custom-tooltip" style={{ background:"rgba(238, 245, 246, 0.79)",padding:"10"}}> 
+      <div className="custom-tooltip" style={{ padding:"5px", background:"#ffffff",border: "1px solid #D3D7D8"  }}> 
         <p className="label">{`${label} `}</p>
         <p className="label">{`Issued: ${payload[0].payload.issued} `}</p>
         <p className="label">{`Available: ${payload[0].payload.inventory_count- payload[0].payload.checkout_count  }`}</p>
