@@ -43,7 +43,21 @@ const useStyles = makeStyles((theme) => ({
       height: 200,
   }, 
 }));
-
+async function reportDownload(apiname,filename) {
+  let url = process.env.REACT_APP_API_URL+apiname;  
+  return fetch(url)  
+  .then( res => res.blob() )
+  .then( blob => {
+    console.log(blob)
+    var url = window.URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename+".xlsx";
+    document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+    a.click();    
+    a.remove();
+  });
+ }
 export default function ReportFrame() {
   const classes = useStyles();
   const [reportIndex, setReportIndex] = React.useState('');
@@ -64,34 +78,11 @@ export default function ReportFrame() {
   const bookDataReady=(data)=>{  
     setBookReportData(data["rank_list"])
   };
-  const handleDownload=()=>{ 
-    let csvContent = "data:text/csv;charset=utf-8,"  
-    if(reportType=="member"){
-    csvContent +="Amount Spend,First Name,Last name,Type\n" 
-    custReportData.map(row => {
-      csvContent += row.item_count +","
-      csvContent += row.member_item.first_name +","
-      csvContent += row.member_item.last_name +","
-      csvContent += row.member_item.role +"\n"
-    })
-  }else {
-    csvContent +="Title,Author,Publish,Issue Count,Available,Total\n";
-    bookReportData.map(row => {
-      csvContent +=row.book_item.title+","
-      csvContent += row.book_item.authors+","
-      csvContent += row.book_item.publisher+","
-      csvContent += row.item_count+"," 
-      csvContent += row.inventory_count-row.checkout_count+"," 
-      csvContent += row.inventory_count+"\n"
-    })
-  }
-    var encodedUri = encodeURI(csvContent);
-    var link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", reportType=="member"?"HighestPayingCustomers.csv":"TopIssuedBooks.csv");
-    document.body.appendChild(link);  
-    link.click()
-} 
+  const handleDownload=()=>{   
+    reportDownload(reportType=="member"?"getCustomerRankingReport":"getTopBooksReport",
+                                     reportType=="member"?"HighestPayingCustomers":"TopBooksReport")     
+  }    
+
 return(
   <Container maxWidth="lg" className={classes.container}>
     <Grid container spacing={3}>             
