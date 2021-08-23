@@ -1,70 +1,91 @@
-# Getting Started with Create React App
+# Library Mangement  
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
+> https://aaronmenezes.github.io/Library-Mangement-Webapp
 
-## Available Scripts
 
-In the project directory, you can run:
+>Library-Mangement, is a book library managment platform.
+Built with React js, it is mobile ready. 
 
-### `yarn start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Perform general CRUD operations on Books and Members
+- Issue a book to a member
+- Issue a book return from a member
+- Search for a book by name and author
+- Charge a rent fee on book returns
+- The librarian can import books into the system using the Book API services and create book records.
+- Reports Most popular books with quantity available in the library and total quantity.
+- Reports Highest paying Customers.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
 
-### `yarn test`
+## App Sections
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Signin
 
-### `yarn build`
+_Sign-in as Admin or Member_
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/1.png" width="1024" height="450">
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Dashboard
 
-### `yarn eject`
+_Provides an upfront view of the platform_. Can me customised to include different views_
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/2.png" width="1024" height="450">
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Memebers
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+_Provides a list of members registerd with the platform. Allows admin to add, edit, delete members_
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/6.png" width="1024" height="450">
 
-## Learn More
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/4.png" width="1024" height="450">
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/5.png" width="1024" height="450">
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Books
 
-### Code Splitting
+_Provides a list of book registerd with the platform. Allows admin to issue book to members, return books from members, Update & Delete books from the system.
+Also provides a quick books search based on Book Title and Authors_
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/7.png" width="1024" height="450">
 
-### Analyzing the Bundle Size
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/8.png" width="1024" height="450">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/9.png" width="1024" height="450">
 
-### Making a Progressive Web App
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/10.png" width="1024" height="450">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/11.png" width="1024" height="450">
 
-### Advanced Configuration
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/12.png" width="1024" height="450">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
+### Book Imports
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+_Provides admin an interface to check for books with a book service.Allows admin to search using various parameter. 
+Admin can import a specified quantities of book to the system_
 
-### `yarn build` fails to minify
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/15.png" width="1024" height="450">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/16.png" width="1024" height="450">
+
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/17.png" width="1024" height="450">
+
+
+### Reports
+_Allows admin a view of Top books check out by members, and Highest paying members in the library. Allows Admin to download these reports in Microsoft Excel format_
+
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/13.png" width="1024" height="450">
+
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/14.png" width="1024" height="450">
+
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/18.png" width="1024" height="450">
+
+
+### Member View
+_Allows library members to view a list of books availabel in the library_
+
+<img src="https://github.com/aaronmenezes/Library-Mangement-Webapp/blob/main/screens_shots/13.png" width="1024" height="450">
+
