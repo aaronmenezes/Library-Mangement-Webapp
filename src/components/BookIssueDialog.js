@@ -33,7 +33,7 @@ export default function BookUpdateDialog(props) {
   const Details = (prop)=>{    
     var pairs = [];
       for(var key in prop.data){
-        pairs.push(<p>{key} : {prop.data[key]}</p>);
+        pairs.push(<p>{key.replaceAll("_"," ")} : {prop.data[key]}</p>);
       } 
     return (
             <div className="Data-item">{pairs}</div>
@@ -43,7 +43,7 @@ export default function BookUpdateDialog(props) {
   const MemberDetails = (prop)=>{    
     var pairs = [];
       for(var key in prop.data){
-        pairs.push(<p>{key} : {prop.data[key]}</p>);
+        pairs.push(<p>{key.replaceAll("_"," ")} : {prop.data[key]}</p>);
       } 
     return (
             <div className="Data-item">{pairs}</div>
@@ -113,8 +113,7 @@ export default function BookUpdateDialog(props) {
       <h3>Member Details</h3>
       <MemberDetails data={member!=null?member:{}}>  </MemberDetails>   
 
-      </Paper>
-      {/* </Typography> */}
+      </Paper> 
       </Grid>
       <Grid item xs={12} md={4} lg={6}>  
         <Paper className={classes.paper} elevation={3}>

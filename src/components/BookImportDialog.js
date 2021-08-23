@@ -34,7 +34,7 @@ export default function BookImportDialog(props) {
       var pairs = [];
         for(var key in prop.data){
           if(key!=="count" && key!=="inventory_count")
-            pairs.push(<p>{key} : {prop.data[key]}</p>);
+            pairs.push(<p>{key.replaceAll("_"," ")} : {prop.data[key]}</p>);
         } 
       return (
              <div className="Data-item">{pairs}</div>
