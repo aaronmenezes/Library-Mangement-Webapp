@@ -36,7 +36,7 @@ export default function BookUpdateDialog(props) {
         pairs.push(<p>{key.replaceAll("_"," ")} : {prop.data[key]}</p>);
       } 
     return (
-            <div className="Data-item">{pairs}</div>
+      <div className="Data-item">{pairs}</div>
     );
   }
 
@@ -46,7 +46,7 @@ export default function BookUpdateDialog(props) {
         pairs.push(<p>{key.replaceAll("_"," ")} : {prop.data[key]}</p>);
       } 
     return (
-            <div className="Data-item">{pairs}</div>
+      <div className="Data-item">{pairs}</div>
     );
   }
   
@@ -59,7 +59,8 @@ export default function BookUpdateDialog(props) {
   };
 
   const handleClose = () => { 
-          onClose();
+    setMember(null)
+    onClose();
   }; 
 
 

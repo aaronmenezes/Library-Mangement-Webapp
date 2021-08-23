@@ -7,6 +7,7 @@ import {Table,TableBody,TableCell,TableContainer,TableHead,TableRow} from '@mate
 import {Link,IconButton} from '@material-ui/core'; 
 import {TextField,Button, ButtonGroup} from '@material-ui/core';  
 import {AddCircle,Info} from '@material-ui/icons';  
+import Search from '@material-ui/icons/Search';
 import BookInfoDialog from './BookInfoDialog';
 import BookImportDialog from './BookImportDialog';
 
@@ -139,6 +140,7 @@ export default function ImportBookFrame() {
             <Button variant="contained" 
               color="primary"
                 style={{width:"20%",marginTop:"20px"}}
+                startIcon={<Search/>}
                 onClick={importlist}>
               Search  
             </Button>

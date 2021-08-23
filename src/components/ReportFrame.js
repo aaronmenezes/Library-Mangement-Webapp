@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {Paper,Grid,Typography,Container,Box} from '@material-ui/core';
 import {Table ,TableBody ,TableCell,TableContainer,TableHead,TableRow} from '@material-ui/core';   
 import {Select,FormControl,InputLabel,Button,MenuItem,Link} from '@material-ui/core';  
+import GetApp from "@material-ui/icons/GetApp";
 import DashTileBooks from './DashTileBooks';
 import DashTileCustomers from './DashTileCustomers';   
 
@@ -102,7 +103,7 @@ return(
               <MenuItem value={"member"}>Highest Paying Customers</MenuItem> 
             </Select>
           </FormControl>
-          <Button variant="contained" color="primary" style={{width:"20%",marginTop:"20px"}} disabled={reportType==""} onClick={handleDownload}>
+          <Button variant="contained" color="primary" style={{width:"20%",marginTop:"20px"}} startIcon={<GetApp/> } disabled={reportType==""} onClick={handleDownload}>
             Download Report  
           </Button>
         </Paper>

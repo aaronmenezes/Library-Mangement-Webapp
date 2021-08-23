@@ -4,7 +4,7 @@ import Title from './Title';
 import { makeStyles } from '@material-ui/core/styles';  
 import {Paper,Grid,Typography,Container,Box} from '@material-ui/core';
 import {Table,TableBody,TableCell,TableContainer,TableHead,TableRow} from '@material-ui/core';  
-import {Link,Button,IconButton,Snackbar,TextField} from '@material-ui/core'; 
+import {Link,Button,IconButton,Snackbar,TextField,ButtonGroup} from '@material-ui/core'; 
 import {Menu,MenuItem} from '@material-ui/core'; 
 import {Accordion,AccordionSummary,AccordionDetails} from '@material-ui/core';
 
@@ -13,7 +13,8 @@ import InfoDialog from './InfoDialog';
 import BookUpdateDialog from'./BookUpdateDialog';
 import BookIssueDialog from'./BookIssueDialog';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
+import Search from '@material-ui/icons/Search';
+import Clear from '@material-ui/icons/Clear';
 
 function preventDefault(event) {
   event.preventDefault();
@@ -315,18 +316,18 @@ export default function BookFrame() {
                 <Grid item xs={3}>
                   <TextField  id="authors-input"  label="Author"  variant="outlined" type="text" onChange={handleParamChange}/>                 
                 </Grid>
-                <Grid item xs={1}>
-                  <Button variant="contained" lg color="primary" style={{height:"100%"}} disabled={searchDisabled} onClick={searchBooks}>
+                <Grid item xs={4}>
+                <ButtonGroup color="primary"  variant="contained" style={{height:"100%"}}>
+                  <Button variant="contained" lg color="primary" style={{height:"100%"}} disabled={searchDisabled}  startIcon={<Search />} onClick={searchBooks}>
                   Search  
-                  </Button>  
-                  </Grid>
-                <Grid item xs={3}>
-                  <Button variant="contained" lg color="accent" style={{height:"100%"}} preventDefault onClick={()=>{setSearchBookList([])}}   >
+                  </Button> 
+                  <Button variant="contained" lg color="accent" style={{height:"100%"}} startIcon={<Clear/>} preventDefault onClick={()=>{setSearchBookList([])}}   >
                   Clear Search  
-                  </Button>              
+                  </Button>  
+                  </ButtonGroup>            
                 </Grid> 
-                <Grid item xs={2}> 
-                  <Typography >{searchbookList.length +"  Search results"}</Typography>  
+                <Grid item xs={2}>  
+                  <Typography style={{height:"100%",verticalAlign:"middle"}}>{searchbookList.length +"  Search results"}</Typography>  
                 </Grid>            
               </Grid> 
               
