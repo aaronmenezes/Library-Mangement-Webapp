@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/Library-Mangement-Webapp/static/css/main.a617e044.chunk.css",
-    "main.js": "/Library-Mangement-Webapp/static/js/main.64a8d47d.chunk.js",
-    "main.js.map": "/Library-Mangement-Webapp/static/js/main.64a8d47d.chunk.js.map",
-    "runtime-main.js": "/Library-Mangement-Webapp/static/js/runtime-main.8f30bfc0.js",
-    "runtime-main.js.map": "/Library-Mangement-Webapp/static/js/runtime-main.8f30bfc0.js.map",
-    "static/js/2.f95ddef4.chunk.js": "/Library-Mangement-Webapp/static/js/2.f95ddef4.chunk.js",
-    "static/js/2.f95ddef4.chunk.js.map": "/Library-Mangement-Webapp/static/js/2.f95ddef4.chunk.js.map",
-    "static/js/3.522e7aa2.chunk.js": "/Library-Mangement-Webapp/static/js/3.522e7aa2.chunk.js",
-    "static/js/3.522e7aa2.chunk.js.map": "/Library-Mangement-Webapp/static/js/3.522e7aa2.chunk.js.map",
+    "main.css": "/Library-Mangement-Webapp/static/css/main.5739ad41.chunk.css",
+    "main.js": "/Library-Mangement-Webapp/static/js/main.e9032fe6.chunk.js",
+    "main.js.map": "/Library-Mangement-Webapp/static/js/main.e9032fe6.chunk.js.map",
+    "runtime-main.js": "/Library-Mangement-Webapp/static/js/runtime-main.1905db27.js",
+    "runtime-main.js.map": "/Library-Mangement-Webapp/static/js/runtime-main.1905db27.js.map",
+    "static/js/2.1bd1d8e9.chunk.js": "/Library-Mangement-Webapp/static/js/2.1bd1d8e9.chunk.js",
+    "static/js/2.1bd1d8e9.chunk.js.map": "/Library-Mangement-Webapp/static/js/2.1bd1d8e9.chunk.js.map",
+    "static/js/3.1687649a.chunk.js": "/Library-Mangement-Webapp/static/js/3.1687649a.chunk.js",
+    "static/js/3.1687649a.chunk.js.map": "/Library-Mangement-Webapp/static/js/3.1687649a.chunk.js.map",
     "index.html": "/Library-Mangement-Webapp/index.html",
-    "static/css/main.a617e044.chunk.css.map": "/Library-Mangement-Webapp/static/css/main.a617e044.chunk.css.map",
-    "static/js/2.f95ddef4.chunk.js.LICENSE.txt": "/Library-Mangement-Webapp/static/js/2.f95ddef4.chunk.js.LICENSE.txt",
+    "static/css/main.5739ad41.chunk.css.map": "/Library-Mangement-Webapp/static/css/main.5739ad41.chunk.css.map",
+    "static/js/2.1bd1d8e9.chunk.js.LICENSE.txt": "/Library-Mangement-Webapp/static/js/2.1bd1d8e9.chunk.js.LICENSE.txt",
     "static/media/logo.6ce24c58.svg": "/Library-Mangement-Webapp/static/media/logo.6ce24c58.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.8f30bfc0.js",
-    "static/js/2.f95ddef4.chunk.js",
-    "static/css/main.a617e044.chunk.css",
-    "static/js/main.64a8d47d.chunk.js"
+    "static/js/runtime-main.1905db27.js",
+    "static/js/2.1bd1d8e9.chunk.js",
+    "static/css/main.5739ad41.chunk.css",
+    "static/js/main.e9032fe6.chunk.js"
   ]
 }
